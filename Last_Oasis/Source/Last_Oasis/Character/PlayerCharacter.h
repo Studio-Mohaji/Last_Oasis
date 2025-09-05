@@ -17,6 +17,7 @@ class LAST_OASIS_API APlayerCharacter : public ACharacter,public IAbilitySystemI
 public:
 	APlayerCharacter();
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual void FellOutOfWorld(const class UDamageType& dmgType) override;
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;

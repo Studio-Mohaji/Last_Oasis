@@ -55,4 +55,6 @@ protected:
 	FGameplayAttributeData Temperature;
 	UPROPERTY(BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Level;
+
+	friend class UInGameHUD;
 };

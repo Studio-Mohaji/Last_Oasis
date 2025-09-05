@@ -143,6 +143,11 @@ class UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() con
 	return ASC;
 }
 
+void APlayerCharacter::FellOutOfWorld(const class UDamageType& dmgType)
+{
+    Super::FellOutOfWorld(dmgType);
+}
+
 void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
