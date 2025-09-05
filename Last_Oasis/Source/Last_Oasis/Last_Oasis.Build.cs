@@ -7,7 +7,7 @@ public class Last_Oasis : ModuleRules
 	public Last_Oasis(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-
+		PublicIncludePaths.AddRange(new string[] { "Last_Oasis" });
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
 	}
 }
