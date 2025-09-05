@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class LAST_OASIS_API UDataAssetBase : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
