@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\source\\last_oasis\\last_oasis.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\intermediate\\build\\win64\\x64\\last_oasiseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\last_oasis\\definitions.last_oasis.h",
+            "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\source\\last_oasis\\last_oasis.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

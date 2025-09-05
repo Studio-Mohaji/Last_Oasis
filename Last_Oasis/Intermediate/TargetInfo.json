@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "Last_Oasis",
+			"Path": "..\\Source\\Last_Oasis.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "Last_OasisEditor",
+			"Path": "..\\Source\\Last_OasisEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

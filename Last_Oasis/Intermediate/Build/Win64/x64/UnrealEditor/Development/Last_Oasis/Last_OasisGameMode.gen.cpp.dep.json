@@ -1,0 +1,19 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\intermediate\\build\\win64\\unrealeditor\\inc\\last_oasis\\uht\\last_oasisgamemode.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\intermediate\\build\\win64\\x64\\last_oasiseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\last_oasis\\definitions.last_oasis.h",
+            "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\source\\last_oasis\\last_oasisgamemode.h",
+            "d:\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\gameframework\\gamemodebase.h",
+            "d:\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\engine\\serverstatreplicator.h",
+            "d:\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\serverstatreplicator.generated.h",
+            "d:\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gamemodebase.generated.h",
+            "d:\\unreal_github_shuby\\last_oasis\\last_oasis\\intermediate\\build\\win64\\unrealeditor\\inc\\last_oasis\\uht\\last_oasisgamemode.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
