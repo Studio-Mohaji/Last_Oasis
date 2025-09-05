@@ -14,7 +14,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define LAST_OASIS_Last_OasisCharacter_generated_h
 
-#define FID_Unreal_github_shuby_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_INCLASS_NO_PURE_DECLS \
+#define FID_Users_JAEHAK_Documents_GitHub_Project_Casino_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesALast_OasisCharacter(); \
 	friend struct Z_Construct_UClass_ALast_OasisCharacter_Statics; \
@@ -23,7 +23,7 @@ public: \
 	DECLARE_SERIALIZER(ALast_OasisCharacter)
 
 
-#define FID_Unreal_github_shuby_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_ENHANCED_CONSTRUCTORS \
+#define FID_Users_JAEHAK_Documents_GitHub_Project_Casino_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	ALast_OasisCharacter(ALast_OasisCharacter&&); \
@@ -35,12 +35,12 @@ public: \
 	NO_API virtual ~ALast_OasisCharacter();
 
 
-#define FID_Unreal_github_shuby_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_18_PROLOG
-#define FID_Unreal_github_shuby_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_GENERATED_BODY \
+#define FID_Users_JAEHAK_Documents_GitHub_Project_Casino_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_18_PROLOG
+#define FID_Users_JAEHAK_Documents_GitHub_Project_Casino_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_Unreal_github_shuby_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_INCLASS_NO_PURE_DECLS \
-	FID_Unreal_github_shuby_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_ENHANCED_CONSTRUCTORS \
+	FID_Users_JAEHAK_Documents_GitHub_Project_Casino_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_INCLASS_NO_PURE_DECLS \
+	FID_Users_JAEHAK_Documents_GitHub_Project_Casino_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h_21_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
@@ -48,7 +48,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 template<> LAST_OASIS_API UClass* StaticClass<class ALast_OasisCharacter>();
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID FID_Unreal_github_shuby_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h
+#define CURRENT_FILE_ID FID_Users_JAEHAK_Documents_GitHub_Project_Casino_Last_Oasis_Last_Oasis_Source_Last_Oasis_Last_OasisCharacter_h
 
 
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

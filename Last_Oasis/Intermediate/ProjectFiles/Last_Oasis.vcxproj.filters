@@ -11,6 +11,7 @@
     <None Include="..\..\Source\Last_OasisEditor.Target.cs">
       <Filter>Source</Filter>
     </None>
+    <None Include="..\..\.vsconfig" />
     <Filter Include="Config">
       <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
     </Filter>
@@ -52,6 +53,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Last_Oasis\Last_OasisGameMode.h">
       <Filter>Source\Last_Oasis</Filter>
+    </ClCompile>
+    <Filter Include="Source\Last_Oasis\Data">
+      <UniqueIdentifier>{B2F037F4-F130-3F72-A2CF-07EE0C392E01}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Last_Oasis\Data\DataAssetBase.cpp">
+      <Filter>Source\Last_Oasis\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Last_Oasis\Data\DataAssetBase.h">
+      <Filter>Source\Last_Oasis\Data</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

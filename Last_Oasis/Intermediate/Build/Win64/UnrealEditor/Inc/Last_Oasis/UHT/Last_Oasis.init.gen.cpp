@@ -17,13 +17,13 @@ void EmptyLinkFunctionForGeneratedCodeLast_Oasis_init() {}
 				nullptr,
 				0,
 				PKG_CompiledIn | 0x00000000,
-				0xE75BDA44,
-				0xF9EA5087,
+				0xA6B00D8A,
+				0x614C46B7,
 				METADATA_PARAMS(0, nullptr)
 			};
 			UECodeGen_Private::ConstructUPackage(Z_Registration_Info_UPackage__Script_Last_Oasis.OuterSingleton, PackageParams);
 		}
 		return Z_Registration_Info_UPackage__Script_Last_Oasis.OuterSingleton;
 	}
-	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_Last_Oasis(Z_Construct_UPackage__Script_Last_Oasis, TEXT("/Script/Last_Oasis"), Z_Registration_Info_UPackage__Script_Last_Oasis, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xE75BDA44, 0xF9EA5087));
+	static FRegisterCompiledInInfo Z_CompiledInDeferPackage_UPackage__Script_Last_Oasis(Z_Construct_UPackage__Script_Last_Oasis, TEXT("/Script/Last_Oasis"), Z_Registration_Info_UPackage__Script_Last_Oasis, CONSTRUCT_RELOAD_VERSION_INFO(FPackageReloadVersionInfo, 0xA6B00D8A, 0x614C46B7));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

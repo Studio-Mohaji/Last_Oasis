@@ -1,0 +1,13 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\jaehak\\documents\\github\\project_casino\\last_oasis\\last_oasis\\intermediate\\build\\win64\\unrealeditor\\inc\\last_oasis\\uht\\last_oasis.init.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\jaehak\\documents\\github\\project_casino\\last_oasis\\last_oasis\\intermediate\\build\\win64\\x64\\last_oasiseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\jaehak\\documents\\github\\project_casino\\last_oasis\\last_oasis\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\last_oasis\\definitions.last_oasis.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

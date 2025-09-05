@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Last_OasisModuleRules")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Development")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+787dd2886b4bbc5398a6f07fe840897ea0e01c4b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9460a745db8c1d18fc187b970898842cb353f788")]
 [assembly: System.Reflection.AssemblyProductAttribute("Last_OasisModuleRules")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Last_OasisModuleRules")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
