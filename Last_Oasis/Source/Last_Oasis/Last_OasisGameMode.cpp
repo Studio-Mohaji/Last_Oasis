@@ -4,13 +4,10 @@
 #include "Engine/World.h"
 #include "Math/UnrealMathUtility.h"
 
-USTRUCT(BlueprintType)
-struct FSpawnResult
+ALast_OasisGameMode::ALast_OasisGameMode()
 {
-    FVector LocationA;
-    FVector LocationB;
-    FVector LocationC;
-};
+    
+}
 
 void ALast_OasisGameMode::SpawnBuilding(const FVector& Center, float L)
 {
@@ -24,7 +21,7 @@ void ALast_OasisGameMode::SpawnBuilding(const FVector& Center, float L)
     FVector LocationB;
     FVector LocationC;
     
-    const float MinDistanceBetweenBuildings = 2 * L / 5.0f;
+    const float MinDistanceBetweenBuildings = 3 * L / 5.0f;
     const float MinDistanceToEdge = L / 8.0f;
 
     const int MaxTries = 500; // 좌표 찾기 시도 횟수 제한

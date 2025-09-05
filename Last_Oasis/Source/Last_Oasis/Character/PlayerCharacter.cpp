@@ -2,6 +2,8 @@
 
 
 #include "Character/PlayerCharacter.h"
+
+#include "AbilitySystemComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -9,6 +11,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Player/LOPlayerState.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -143,6 +146,13 @@ class UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() con
 void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+    if (ALOPlayerState* PS = GetPlayerState<ALOPlayerState>())
+    {
+        ASC = PS->GetAbilitySystemComponent();
+        ASC ->InitAbilityActorInfo(PS,this);
+    }
+    APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
+    PlayerController->ConsoleCommand(TEXT("Showdebug Abilitysystem"));
 }
 
 void APlayerCharacter::NotifyControllerChanged()
