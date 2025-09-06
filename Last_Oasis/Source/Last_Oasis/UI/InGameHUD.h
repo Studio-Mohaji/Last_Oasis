@@ -36,13 +36,25 @@ protected:
 
 	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UProgressBar> Health;
-	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UProgressBar> Hunger;
-	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UProgressBar> Thirst;
-	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UProgressBar> Temperature;
-	
+
+	/*UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UImage> Thirst;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UImage> Hunger;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UImage> Temperature;*/
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* ThirstMID;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* HungerMID;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* TemperatureMID;
+
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UTextBlock> DaysText;
@@ -69,10 +81,10 @@ protected:
 	TObjectPtr<class UTextBlock> GoalBarText;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> Inventory;
+	TObjectPtr<class UBorder> Inventory;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> Crafting;
+	TObjectPtr<class UBorder> Crafting;
 
 	UTexture2D* SunTexture;
 	UTexture2D* MoonTexture;
@@ -96,4 +108,10 @@ public:
 
 	UFUNCTION()
 	void UpdateDays(int32 Days);
+
+	UFUNCTION()
+	void InitProgress(TObjectPtr<class UImage> State, UMaterialInstanceDynamic*& MID);
+
+	UFUNCTION()
+    void UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent);
 };
