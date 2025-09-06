@@ -79,15 +79,31 @@ void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
 
 		if(Day_Night)
 		{
-			int TotalMinutes = Hour * 60 + Minute;
+			if(Day_Night && ASC)
+			{
+				int TotalMinutes = Hour * 60 + Minute;
 
-			if (TotalMinutes >= 6 * 60 && TotalMinutes < 20 * 60 + 24)
-			{
-				Day_Night->SetBrushFromTexture(SunTexture);
-			}
-			else
-			{
-				Day_Night->SetBrushFromTexture(MoonTexture);
+			
+				if (TotalMinutes >= 6 * 60 && TotalMinutes < 20 * 60 + 24)
+				{
+					Day_Night->SetBrushFromTexture(SunTexture);
+					if (ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("Game.Night")))
+					{
+						ASC->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Night"));
+						ASC->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Day"));
+						Day_Night->SetBrushFromTexture(SunTexture);
+					}
+				}
+				else
+				{
+					Day_Night->SetBrushFromTexture(MoonTexture);
+					if (ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("Game.Day")))
+					{
+						ASC->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Day"));
+						ASC->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Night"));
+						Day_Night->SetBrushFromTexture(MoonTexture);
+					}
+				}
 			}
 		}
 	}
@@ -100,6 +116,14 @@ void UInGameHUD::UpdateDays(int32 Days)
 		FString NewText = FString::Printf(TEXT("%d Days"), Days);
 
 		DaysText->SetText(FText::FromString(NewText));
+		if (Days == 6 || Days == 12)
+		{
+			ASC->ApplyModToAttribute(ULOAttributeSet::GetLevelAttribute(),EGameplayModOp::Additive,1);
+			FGameplayTagContainer Tag;
+			Tag.AddTag(FGameplayTag::RequestGameplayTag("State.Reduction"));
+			ASC->CancelAbilities(&Tag);
+			ASC->TryActivateAbilitiesByTag(Tag);
+		}
 	}
 }
 
