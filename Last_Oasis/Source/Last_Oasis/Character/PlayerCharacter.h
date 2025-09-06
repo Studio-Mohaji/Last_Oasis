@@ -20,6 +20,7 @@ public:
 	virtual void FellOutOfWorld(const class UDamageType& dmgType) override;
 
 protected:
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void NotifyControllerChanged() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -32,10 +33,16 @@ private:
 	TObjectPtr<class UCameraComponent> FollowCamera;
 	
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<class UAbilitySystemComponent> ASC;
+	TObjectPtr<class ULOAbilitySystemComponent> ASC;
 
 //input
 protected:
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
+	
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TMap<int32, TSubclassOf<class UGameplayAbility>> StartInputAbilities;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputMappingContext> InputMappingContext;
 	
@@ -68,6 +75,10 @@ protected:
 
 private:
 	void Move(const FInputActionValue& Value);
-
 	void Look(const FInputActionValue& Value);
+
+private:
+	bool bIsInShadow;
+	UPROPERTY()
+	TObjectPtr<class ADirectionalLight> Sun;
 };

@@ -3,13 +3,15 @@
 
 #include "Player/LOPlayerState.h"
 #include "AbilitySystemComponent.h"
+#include "GamePlayAbility/LOAbilitySystemComponent.h"
 #include "GamePlayAbility/AttributeSet/LOAttributeSet.h"
 
 ALOPlayerState::ALOPlayerState()
 {
-	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
-	ASC -> SetIsReplicated(true);
 	AttributeSet = CreateDefaultSubobject<ULOAttributeSet>(TEXT("AttributeSet"));
+	ASC = CreateDefaultSubobject<ULOAbilitySystemComponent>(TEXT("ASC"));
+	ASC->AddAttributeSetSubobject<ULOAttributeSet>(AttributeSet);
+	ASC -> SetIsReplicated(true);
 }
 
 class UAbilitySystemComponent* ALOPlayerState::GetAbilitySystemComponent() const
