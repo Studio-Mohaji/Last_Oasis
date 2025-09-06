@@ -10,13 +10,19 @@ class LAST_OASIS_API UEnemyAnim : public UAnimInstance
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void NativeBeginPlay() override; 
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 AnimStateIdx;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bCanAttack;
+	bool bAnimAttack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsDead;
+	bool bAnimDead;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Speed;
 };
