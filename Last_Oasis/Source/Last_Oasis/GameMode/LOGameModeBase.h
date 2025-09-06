@@ -4,11 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Player/LOPlayerController.h"
 #include "LOGameModeBase.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class LAST_OASIS_API ALOGameModeBase : public AGameModeBase
 {
@@ -66,4 +64,7 @@ private:
 	int32 LastPrintedMinute = -1;
 
 	FTimerHandle TimeHandle;
+
+	int32 Days = 1;
+	ALOPlayerController* PC;
 };

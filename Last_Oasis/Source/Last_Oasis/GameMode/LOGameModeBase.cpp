@@ -5,7 +5,6 @@
 #include "Engine/DirectionalLight.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/InGameHUD.h"
-#include "Player/LOPlayerController.h"
 
 ALOGameModeBase::ALOGameModeBase()
 {
@@ -18,6 +17,8 @@ void ALOGameModeBase::BeginPlay()
     Sun = Cast<ADirectionalLight>(UGameplayStatics::GetActorOfClass(GetWorld(), ADirectionalLight::StaticClass()));
     ElapsedTime = (6.0f / 24.0f) * DayLength;
 	//GetWorld()->GetTimerManager().SetTimer(TimeHandle, this, &ALOGameModeBase::UpdateGameTime, 1.0f, true);
+
+    PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 }
 
 void ALOGameModeBase::Tick(float DeltaSeconds)
@@ -27,7 +28,13 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
 
     if (ElapsedTime > DayLength)
     {
-        ElapsedTime -= DayLength; // 하루 리셋
+        ElapsedTime -= DayLength;
+
+        Days++;
+        if (PC->HUD)
+        {
+            PC->HUD->UpdateDays(Days);
+        }
     }
 
     CurrentHour = (ElapsedTime / DayLength) * 24.0f;
@@ -38,9 +45,8 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
     if (Minute != LastPrintedMinute)
     {
         LastPrintedMinute = Minute;
-
-		ALOPlayerController* PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-        if(PC && PC->HUD)
+		
+        if(PC->HUD)
         {
             PC->HUD->UpdateTime(Hour, Minute);
 		}

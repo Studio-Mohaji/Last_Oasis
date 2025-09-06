@@ -14,6 +14,7 @@ void UInGameHUD::NativeConstruct()
 	MoonTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_DarkSun.MagicalGirl_DarkSun"));
 
 	UpdateTime(6, 0);
+	UpdateDays(1);
 }
 
 void UInGameHUD::SetAbilitySystemComponent()
@@ -72,5 +73,15 @@ void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
 				Day_Night->SetBrushFromTexture(MoonTexture);
 			}
 		}
+	}
+}
+
+void UInGameHUD::UpdateDays(int32 Days)
+{
+	if(DaysText)
+	{
+		FString NewText = FString::Printf(TEXT("%d Days"), Days);
+
+		DaysText->SetText(FText::FromString(NewText));
 	}
 }
