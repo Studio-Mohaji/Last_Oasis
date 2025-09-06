@@ -14,6 +14,9 @@ class LAST_OASIS_API ALOPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+public:
+	void InitHUD();
+	
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)

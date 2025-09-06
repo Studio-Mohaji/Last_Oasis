@@ -48,6 +48,8 @@ protected:
 	void UpdateGameTime();
 
 private:
+	UPROPERTY()
+	TObjectPtr<class ADirectionalLight> Sun;
 	UPROPERTY(EditAnywhere, Category="Map Info", meta = (AllowPrivateAccess = true))
 	FVector Center;
 	UPROPERTY(EditAnywhere, Category="Map Info", meta = (AllowPrivateAccess = true))

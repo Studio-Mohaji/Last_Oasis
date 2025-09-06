@@ -4,10 +4,8 @@
 #include "Player/LOPlayerController.h"
 #include "UI/InGameHUD.h"
 
-void ALOPlayerController::BeginPlay()
+void ALOPlayerController::InitHUD()
 {
-	Super::BeginPlay();
-	
 	if (HUDWidgetClass)
 	{
 		HUD = CreateWidget<UInGameHUD>(this, HUDWidgetClass);
@@ -17,4 +15,11 @@ void ALOPlayerController::BeginPlay()
 			HUD->SetAbilitySystemComponent();
 		}
 	}
+}
+
+void ALOPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+
 }

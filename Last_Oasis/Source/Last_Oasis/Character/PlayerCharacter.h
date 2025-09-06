@@ -20,6 +20,7 @@ public:
 	virtual void FellOutOfWorld(const class UDamageType& dmgType) override;
 
 protected:
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void NotifyControllerChanged() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -74,6 +75,10 @@ protected:
 
 private:
 	void Move(const FInputActionValue& Value);
-
 	void Look(const FInputActionValue& Value);
+
+private:
+	bool bIsInShadow;
+	UPROPERTY()
+	TObjectPtr<class ADirectionalLight> Sun;
 };

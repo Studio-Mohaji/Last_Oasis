@@ -2,6 +2,8 @@
 
 
 #include "GameMode/LOGameModeBase.h"
+#include "Engine/DirectionalLight.h"
+#include "Kismet/GameplayStatics.h"
 
 ALOGameModeBase::ALOGameModeBase()
 {
@@ -11,7 +13,8 @@ ALOGameModeBase::ALOGameModeBase()
 void ALOGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
-    
+    Sun = Cast<ADirectionalLight>(UGameplayStatics::GetActorOfClass(GetWorld(), ADirectionalLight::StaticClass()));
+    ElapsedTime = (6.0f / 24.0f) * DayLength;
 	//GetWorld()->GetTimerManager().SetTimer(TimeHandle, this, &ALOGameModeBase::UpdateGameTime, 1.0f, true);
 }
 
@@ -35,6 +38,12 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
         LastPrintedMinute = Minute;
         UE_LOG(LogTemp, Log, TEXT("현재 게임 시각: %02d:%02d"), Hour, Minute);
     }
+    if (Sun == nullptr) return;
+
+    float Pitch = (CurrentHour / 24.0f) * 360.0f - 90.0f;
+
+    FRotator NewRotation(-Pitch, -90.0f, 0.0f);
+    Sun->SetActorRotation(NewRotation);
 }
 
 void ALOGameModeBase::SpawnBuilding()

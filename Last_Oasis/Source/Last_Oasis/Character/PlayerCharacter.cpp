@@ -9,14 +9,18 @@
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Engine/DirectionalLight.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GamePlayAbility/LOAbilitySystemComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/LOPlayerController.h"
 #include "Player/LOPlayerState.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
+    PrimaryActorTick.bCanEverTick = true;
     // Set size for collision capsule
     GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
@@ -139,6 +143,44 @@ APlayerCharacter::APlayerCharacter()
     }
 }
 
+void APlayerCharacter::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+	
+    if (!Sun) 
+        return;
+    FVector Start = GetActorLocation();
+    FVector SunDirection = -Sun->GetActorForwardVector(); // 태양에서 오는 빛 방향
+    FVector End = Start + SunDirection * 10000.0f; // 충분히 먼 거리
+
+    FHitResult Hit;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+
+    bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params);
+
+    bIsInShadow = bHit;
+
+    // 디버그
+    if (bIsInShadow)
+    {
+        if (!ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow"))))
+        {
+            ASC->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow")));
+            UE_LOG(LogTemp, Log, TEXT("그림자 안!"));
+        }
+    }
+    else
+    {
+        if (ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow"))))
+        {
+            ASC->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow")));
+            UE_LOG(LogTemp, Log, TEXT("그림자 밖!"));
+        }
+    }
+}
+
+
 class UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() const
 {
 	return ASC;
@@ -152,6 +194,8 @@ void APlayerCharacter::FellOutOfWorld(const class UDamageType& dmgType)
 void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+    Sun = Cast<ADirectionalLight>(UGameplayStatics::GetActorOfClass(GetWorld(), ADirectionalLight::StaticClass()));
+
     if (ALOPlayerState* PS = GetPlayerState<ALOPlayerState>())
     {
         ASC = Cast<ULOAbilitySystemComponent>(PS->GetAbilitySystemComponent());
@@ -173,8 +217,9 @@ void APlayerCharacter::PossessedBy(AController* NewController)
         StartSpec.InputID = StartInputAbilitie.Key;
         ASC->GiveAbility(StartSpec);
     }
-    APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
+    ALOPlayerController* PlayerController = CastChecked<ALOPlayerController>(NewController);
     PlayerController->ConsoleCommand(TEXT("Showdebug Abilitysystem"));
+    PlayerController->InitHUD();
 }
 
 void APlayerCharacter::NotifyControllerChanged()
