@@ -18,11 +18,23 @@ class LAST_OASIS_API ULOGA_Attack : public UGameplayAbility
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
+	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
 
 protected:
 	UFUNCTION()
 	void OnCompleteCallback();
 	UFUNCTION()
 	void OnInterruptedCallback();
+
+	FName GetNextSection();
+	void StartComboTimer();
+	void CheckComboInput();
+	
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	TObjectPtr<class UAttackData> ComboData;
+
+	uint8 CurrentCombo = 0;
+	FTimerHandle ComboTimerHandle;
+	bool HasNextcomboInput = false;
 	
 };
