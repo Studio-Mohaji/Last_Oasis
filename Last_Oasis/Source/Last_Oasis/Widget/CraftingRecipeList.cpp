@@ -6,6 +6,7 @@
 
 void UCraftingRecipeList::NativeConstruct()
 {
+    DefaultBrushColor = BackgroundBorder->GetBrushColor();
 	if (BackgroundBorder)
 	{
 		BackgroundBorder->OnMouseButtonDownEvent.BindUFunction(this, "OnClicked");
@@ -28,8 +29,8 @@ void UCraftingRecipeList::OnClicked()
 void UCraftingRecipeList::SetSelected(bool bSelected)
 {
     if (!BackgroundBorder) return;
-
-    BackgroundBorder->SetBrushColor(bSelected ? FLinearColor::Blue : FLinearColor::Black);
+    
+    BackgroundBorder->SetBrushColor(bSelected ? FLinearColor::Gray : DefaultBrushColor);
 
 }
 

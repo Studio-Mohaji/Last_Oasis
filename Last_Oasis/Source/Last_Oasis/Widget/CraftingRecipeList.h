@@ -44,6 +44,7 @@ public:
 
 	void SetSelected(bool bSelected);
 
+	FLinearColor DefaultBrushColor;
 
 	UFUNCTION(BlueprintCallable, Category = "Crafting")
 	void SetRecipeData();

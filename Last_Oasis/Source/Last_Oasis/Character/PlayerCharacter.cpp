@@ -373,9 +373,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
     EnhancedInputComponent->BindAction(Interaction, ETriggerEvent::Started, this, &APlayerCharacter::InteractionFuction);
 
-
-    EnhancedInputComponent->BindAction(ToggleCraft, ETriggerEvent::Started, this, &APlayerCharacter::ToggleCraftFunction);
-    EnhancedInputComponent->BindAction(ToggleInventory, ETriggerEvent::Started, this, &APlayerCharacter::ToggleInventoryFunction);
+    EnhancedInputComponent->BindAction(ToggleCraft, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleCraftFunction);
+    EnhancedInputComponent->BindAction(ToggleInventory, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleInventoryFunction);
 
 }
 
