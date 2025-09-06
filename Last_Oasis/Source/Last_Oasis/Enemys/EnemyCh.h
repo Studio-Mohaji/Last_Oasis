@@ -40,4 +40,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Damage;
 };
