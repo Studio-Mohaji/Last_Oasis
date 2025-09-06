@@ -26,8 +26,8 @@ protected:
 	virtual void NativeConstruct() override;
 
 	void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
-	void OnHungerChanged(const FOnAttributeChangeData& ChangeData);
 	void OnThirstChanged(const FOnAttributeChangeData& ChangeData);
+	void OnHungerChanged(const FOnAttributeChangeData& ChangeData);	
 	void OnTemperatureChanged(const FOnAttributeChangeData& ChangeData);
 	
 protected:
@@ -37,14 +37,23 @@ protected:
 	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UProgressBar> Health;
 
-	/*UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> Thirst;
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	UImage* Thirst;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> Hunger;
+	UImage* Hunger;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> Temperature;*/
+	UImage* Temperature;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UTextBlock> ThirstText;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UTextBlock> HungerText;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UTextBlock> TemperatureText;
 
 	UPROPERTY()
 	UMaterialInstanceDynamic* ThirstMID;
@@ -73,9 +82,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UTextBlock> GoalText;
-
-	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> GoalImg;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UTextBlock> GoalBarText;
@@ -110,7 +116,7 @@ public:
 	void UpdateDays(int32 Days);
 
 	UFUNCTION()
-	void InitProgress(UImage* State, UMaterialInstanceDynamic*& MID);
+	void InitProgress(UImage*& State, UMaterialInstanceDynamic*& MID);
 
 	UFUNCTION()
     void UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent);
