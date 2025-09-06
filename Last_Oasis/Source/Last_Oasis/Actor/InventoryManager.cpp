@@ -56,7 +56,31 @@ void AInventoryManager::UseItem(UDataAssetBase* ItemData)
 
 void AInventoryManager::GetItem(UDataAssetBase* ItemData)
 {
+    for (int32 i = 0; i < ItemDataList.Num(); i++)
+    {
+        FInventoryItem& item = ItemDataList[i];
+        if (item.ItemData == ItemData)
+        {
+            if (item.ItemData->IsStackable)
+            {
+                if (item.CurrentCount <= item.ItemData->MaxStackCount)
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("get Item"));
 
+                    // æ∆¿Ã≈€ »πµÊ »ø∞˙
+
+                    item.CurrentCount++;
+                    UpdateBroadCast();
+                    return;
+                }
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("You can't have duplicated item."))
+                    return;
+            }
+        }
+    }
 }
 
 void AInventoryManager::TestGetItem()

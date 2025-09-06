@@ -23,7 +23,7 @@ void UInventoryWidget::InitializeSlots()
 {
     if (!GridBox || !ItemSlotWidgetClass) return;
 
-    const int32 Rows = 5;
+    const int32 Rows = 6;
     const int32 Columns = 4;
 
     InventorySlots.Empty();
@@ -48,7 +48,7 @@ void UInventoryWidget::InitializeSlots()
 
             NewSlot->ItemImage->SetVisibility(ESlateVisibility::Hidden);
             NewSlot->ItemCount->SetVisibility(ESlateVisibility::Hidden);
-            NewSlot->OnSlotClicked.AddDynamic(this, &UInventoryWidget::HandleSlotClicked);
+            NewSlot->OnSlotClicked.AddDynamic(this, &UInventoryWidget::HandleSlotClicked); // 51
             UE_LOG(LogTemp, Warning, TEXT("Slot binding~~~"));
         }
     }

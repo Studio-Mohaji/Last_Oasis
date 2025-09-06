@@ -16,6 +16,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Player/LOPlayerController.h"
 #include "Player/LOPlayerState.h"
+#include "../Data/InventoryItemStruct.h"
+#include "../Actor/InventoryManager.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -264,6 +266,100 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
     }
 }
 
+void APlayerCharacter::ToggleCraftFunction(const FInputActionValue& Value)
+{
+    if (!CraftingWidget || !InventoryWidget) return;
+
+    APlayerController* PC = Cast<APlayerController>(GetController());
+    if (CraftingWidget->IsVisible())
+    {
+        CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
+
+        PC->SetInputMode(FInputModeGameOnly());
+        PC->bShowMouseCursor = false;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ToggleCraftFunction"));
+        CraftingWidget->SetVisibility(ESlateVisibility::Visible);
+
+        if (InventoryWidget->IsVisible())
+        {
+            InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+
+        FInputModeGameAndUI InputMode;
+        InputMode.SetWidgetToFocus(CraftingWidget->TakeWidget());
+        InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+        PC->SetInputMode(InputMode);
+        PC->bShowMouseCursor = true;
+    }
+}
+
+void APlayerCharacter::ToggleInventoryFunction(const FInputActionValue& Value)
+{
+
+    if (!CraftingWidget || !InventoryWidget) return;
+
+    APlayerController* PC = Cast<APlayerController>(GetController());
+    if (InventoryWidget->IsVisible())
+    {
+        InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ToggleInventoryFunction"));
+        InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+
+        if (CraftingWidget->IsVisible())
+        {
+            CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
+        }
+
+        FInputModeGameAndUI InputMode;
+        InputMode.SetWidgetToFocus(InventoryWidget->TakeWidget());
+        InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+        PC->SetInputMode(InputMode);
+        PC->bShowMouseCursor = true;
+    }
+}
+
+void APlayerCharacter::InteractionFuction(const FInputActionValue& Value)
+{
+    // Get interaction Item Data
+	// InventoryManager->GetItem( Item Data );
+}
+
+void APlayerCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    CraftingManager = Cast<ACraftingManager>(
+        UGameplayStatics::GetActorOfClass(GetWorld(), ACraftingManager::StaticClass()));
+
+    InventoryManager = Cast<AInventoryManager>(
+        UGameplayStatics::GetActorOfClass(GetWorld(), AInventoryManager::StaticClass()));
+
+    if (CraftingWidgetClass)
+    {
+        CraftingWidget = CreateWidget<UCraftingWidget>(GetWorld(), CraftingWidgetClass);
+        if (CraftingWidget)
+            CraftingWidget->AddToViewport();
+    }
+
+    if (InventoryWidgetClass)
+    {
+        InventoryWidget = CreateWidget<UInventoryWidget>(GetWorld(), InventoryWidgetClass);
+        if (InventoryWidget)
+            InventoryWidget->AddToViewport();
+    }
+
+    InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+    CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
+
+    InventoryItems = InventoryManager->ItemDataList;
+}
+
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -274,5 +370,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     
     EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
     EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+
+    EnhancedInputComponent->BindAction(Interaction, ETriggerEvent::Started, this, &APlayerCharacter::InteractionFuction);
+
+
+    EnhancedInputComponent->BindAction(ToggleCraft, ETriggerEvent::Started, this, &APlayerCharacter::ToggleCraftFunction);
+    EnhancedInputComponent->BindAction(ToggleInventory, ETriggerEvent::Started, this, &APlayerCharacter::ToggleInventoryFunction);
+
 }
 
