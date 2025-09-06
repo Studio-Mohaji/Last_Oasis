@@ -56,30 +56,46 @@ void AInventoryManager::UseItem(UDataAssetBase* ItemData)
 
 void AInventoryManager::GetItem(UDataAssetBase* ItemData)
 {
+    if (!ItemData) return;
+
+    bool bItemFound = false;
+
     for (int32 i = 0; i < ItemDataList.Num(); i++)
     {
         FInventoryItem& item = ItemDataList[i];
+
         if (item.ItemData == ItemData)
         {
+            bItemFound = true;
+
             if (item.ItemData->IsStackable)
             {
                 if (item.CurrentCount <= item.ItemData->MaxStackCount)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("get Item"));
-
-                    // 아이템 획득 효과
-
                     item.CurrentCount++;
+                    UE_LOG(LogTemp, Warning, TEXT("get Item"));
                     UpdateBroadCast();
-                    return;
                 }
             }
             else
             {
                 UE_LOG(LogTemp, Warning, TEXT("You can't have duplicated item."))
-                    return;
             }
+            return; // 이미 처리했으면 함수 종료
+
         }
+    }
+
+    if (!bItemFound)
+    {
+        FInventoryItem NewItem;
+        NewItem.ItemData = ItemData;
+        NewItem.CurrentCount = 1;
+        ItemDataList.Add(NewItem);
+       
+        UE_LOG(LogTemp, Warning, TEXT("New item added to inventory: %s"), *ItemData->ItemName.ToString());
+
+        UpdateBroadCast();
     }
 }
 

@@ -347,6 +347,7 @@ void APlayerCharacter::ToggleInventoryFunction(const FInputActionValue& Value)
 
 void APlayerCharacter::InteractionFuction(const FInputActionValue& Value)
 {
+    //InventoryManager->GetItem()
     // Get interaction Item Data
 	// InventoryManager->GetItem( Item Data );
 }
@@ -360,8 +361,6 @@ void APlayerCharacter::BeginPlay()
 
     InventoryManager = Cast<AInventoryManager>(
         UGameplayStatics::GetActorOfClass(GetWorld(), AInventoryManager::StaticClass()));
-
-
 
     InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
     CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
