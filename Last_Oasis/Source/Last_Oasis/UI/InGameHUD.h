@@ -110,7 +110,7 @@ public:
 	void UpdateDays(int32 Days);
 
 	UFUNCTION()
-	void InitProgress(TObjectPtr<class UImage> State, UMaterialInstanceDynamic*& MID);
+	void InitProgress(UImage* State, UMaterialInstanceDynamic*& MID);
 
 	UFUNCTION()
     void UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent);

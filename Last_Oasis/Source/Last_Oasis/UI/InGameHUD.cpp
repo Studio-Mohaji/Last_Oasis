@@ -104,12 +104,13 @@ void UInGameHUD::UpdateDays(int32 Days)
 	}
 }
 
-void UInGameHUD::InitProgress(TObjectPtr<class UImage> State, UMaterialInstanceDynamic*& MID)
+void UInGameHUD::InitProgress(UImage* State, UMaterialInstanceDynamic*& MID)
 {
-	if (State && State->Brush.GetResourceObject())
+	
+	if (State && State->GetBrush().GetResourceObject())
 	{
 		MID = UMaterialInstanceDynamic::Create(
-			Cast<UMaterialInterface>(State->Brush.GetResourceObject()),
+			Cast<UMaterialInterface>(State->GetBrush().GetResourceObject()),
 			this
 		);
 
