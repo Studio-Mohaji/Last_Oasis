@@ -23,7 +23,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     class UInventoryWidget* ParentInventoryWidget;
 
-
     // 슬롯에 들어갈 아이템 정보
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     UDataAssetBase* ItemData;

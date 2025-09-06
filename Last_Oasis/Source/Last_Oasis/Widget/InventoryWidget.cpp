@@ -53,65 +53,49 @@ void UInventoryWidget::InitializeSlots()
 }
 
 
-
-
-
-void UInventoryWidget::SlotUpdate()
+void UInventoryWidget::UpdateSlot()
 {
-    if (!GridBox || !ItemSlotWidgetClass) return;
+    const int32 SlotCount = InventorySlots.Num();
+    const int32 ItemCount = TestItemDataList.Num();
 
-    const int32 Rows = 5;
-    const int32 Columns = 4;
+    TArray<FInventoryItem> UsableItems;
+    TArray<FInventoryItem> NonUsableItems;
 
-    InventorySlots.Empty();
-
-    for (int32 Row = 0; Row < Rows; ++Row)
+    // 아이템 분류
+    for (int32 i = 0; i < ItemCount; ++i)
     {
-        for (int32 Col = 0; Col < Columns; ++Col)
-        {
-            // 슬롯 위젯 생성
-            UInventorySlotWidget* NewSlot = CreateWidget<UInventorySlotWidget>(GetWorld(), ItemSlotWidgetClass);
-            if (!NewSlot) continue;
+        if (!TestItemDataList[i].ItemData) continue;
 
-            // 부모 위젯 세팅
-            NewSlot->ParentInventoryWidget = this;
-
-            // GridPanel에 추가
-            UGridSlot* GridSlot = GridBox->AddChildToGrid(NewSlot);
-            if (GridSlot)
-            {
-                GridSlot->SetRow(Row);
-                GridSlot->SetColumn(Col);
-            }
-
-            // 배열에 저장
-            InventorySlots.Add(NewSlot);
-
-            int32 Index = Row * Columns + Col;
-            UE_LOG(LogTemp, Warning, TEXT("Index: %d"), Index);
-            if (!InventoryActor || InventoryActor->itemList.Num() == 0 || !InventoryActor->itemList.IsValidIndex(Index))
-            {
-                UE_LOG(LogTemp, Warning, TEXT("can't setting"));
-                //NewSlot->ItemData = nullptr;
-                //NewSlot->CurrentCount = 0;
-                NewSlot->SetOptionVisible();
-            }
-            else
-            {
-
-                UE_LOG(LogTemp, Warning, TEXT("setting"));
-                NewSlot->ItemData = InventoryActor->itemList[Index];
-                NewSlot->CurrentCount = 1;
-                NewSlot->SetSlotData();
-            }
-
-
-            NewSlot->ItemImage->SetVisibility(ESlateVisibility::Hidden);
-            NewSlot->ItemCount->SetVisibility(ESlateVisibility::Hidden);
-
-            // NewSlot->ItemData = InventoryItems->itemList[Index]; // 49
-            //// NewSlot->SetOptionVisible();
-            // NewSlot->SetSlotData();
-        }
+        if (TestItemDataList[i].ItemData->IsUsable)
+            UsableItems.Add(TestItemDataList[i]);
+        else
+            NonUsableItems.Add(TestItemDataList[i]);
     }
+
+    // 정렬된 배열 생성
+    TArray<FInventoryItem> SortedItems;
+    SortedItems.Append(UsableItems);
+    SortedItems.Append(NonUsableItems);
+
+    // 슬롯에 세팅
+    for (int32 i = 0; i < SlotCount; ++i)
+    {
+        UInventorySlotWidget* InventorySlot = InventorySlots[i];
+        if (!InventorySlot) continue;
+
+        if (i < SortedItems.Num() && SortedItems[i].ItemData)
+        {
+            InventorySlot->ItemData = SortedItems[i].ItemData;
+            InventorySlot->CurrentCount = SortedItems[i].CurrentCount;
+        }
+        else
+        {
+            InventorySlot->ItemData = nullptr;
+            InventorySlot->CurrentCount = 0;
+        }
+
+        InventorySlot->SetSlotData();
+    }
+
+
 }

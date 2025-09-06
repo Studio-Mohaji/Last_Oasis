@@ -8,7 +8,7 @@ void UItemInfoWidget::SetItemData(UDataAssetBase* ItemData) const
 	if (!ItemData) return; // null이면 바로 종료
 
 	//ItemIcon->SetBrushFromTexture(ItemData->Icon);
-	ItemName->SetText(FText::FromName(ItemData->ItemName));  //11
+	ItemName->SetText(FText::FromName(ItemData->ItemName)); 
 	ItemDescription->SetText(ItemData->Description);
 
 	if(ItemData->IsUsable)

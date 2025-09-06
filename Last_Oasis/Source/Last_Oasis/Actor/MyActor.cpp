@@ -2,6 +2,7 @@
 
 
 #include "../Actor/MyActor.h"
+#include "../Widget/InventoryWidget.h"
 
 // Sets default values
 AMyActor::AMyActor()
@@ -15,7 +16,16 @@ AMyActor::AMyActor()
 void AMyActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+    //if (InventoryWidgetClass)
+    //{
+    //    UInventoryWidget* InventoryUI = CreateWidget<UInventoryWidget>(GetWorld(), InventoryWidgetClass);
+    //    if (InventoryUI)
+    //    {
+    //        InventoryUI->InventoryActor = this; // 안전하게 자기 자신 전달
+    //        InventoryUI->AddToViewport();
+    //    }
+    //}
 }
 
 // Called every frame

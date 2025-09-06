@@ -5,7 +5,11 @@
 #include "CoreMinimal.h"
 #include "Components/GridPanel.h"
 #include "Components/GridSlot.h"
+#include "Components/Button.h"
 #include "Blueprint/UserWidget.h"
+
+#include "../Data/InventoryItemStruct.h"
+
 #include "../Actor/MyActor.h"
 #include "InventoryWidget.generated.h"
 
@@ -29,12 +33,16 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     TSubclassOf<UInventorySlotWidget> ItemSlotWidgetClass;
 
+    // 임시 데이터 세팅 -> 이후 플레이어한테서 가져오기
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	AMyActor* InventoryActor;
+	TArray<FInventoryItem> TestItemDataList;
 	//UItemListDataAsset* InventoryItems;
 
     UPROPERTY(meta = (BindWidget))
     UGridPanel* GridBox;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* TestButton;
 
     UPROPERTY()
     TArray<UInventorySlotWidget*> InventorySlots;
@@ -45,5 +53,5 @@ public:
     void InitializeSlots();
 
     UFUNCTION(BlueprintCallable)
-    void SlotUpdate();
+    void UpdateSlot();
 };

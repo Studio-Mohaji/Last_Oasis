@@ -17,6 +17,10 @@ void UInventorySlotWidget::NativeConstruct()
 
 FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
+
+	if (ItemImage->GetVisibility() == ESlateVisibility::Hidden)
+		return FReply::Unhandled();
+	
 	if (!InfoWidget->IsInViewport())
 	{
 		InfoWidget = ParentInventoryWidget->ItemInfoWidget;
@@ -42,25 +46,56 @@ void UInventorySlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 
 void UInventorySlotWidget::SetSlotData()
 {
-	if (CurrentCount == 0)
+
+	if (!ItemData || CurrentCount <= 0)
 	{
 		ItemImage->SetVisibility(ESlateVisibility::Hidden);
 		ItemCount->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
-	else
-	{
-		ItemImage->SetVisibility(ESlateVisibility::Visible);
-		ItemCount->SetVisibility(ESlateVisibility::Visible);
-	}
 
-	if (ItemData->MaxStackCount < CurrentCount)
+	// 스택 제한 적용
+	if (CurrentCount > ItemData->MaxStackCount)
 		CurrentCount = ItemData->MaxStackCount;
 
-	ItemCount->SetText(FText::AsNumber(CurrentCount));
+	// UI 업데이트
 	ItemImage->SetBrushFromTexture(ItemData->Icon);
+	ItemImage->SetVisibility(ESlateVisibility::Visible);
 
-	//InfoWidget->SetItemData(ItemData);
+	if (ItemData->IsStackable)
+	{
+		ItemCount->SetText(FText::AsNumber(CurrentCount));
+		ItemCount->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		ItemCount->SetText(FText::AsNumber(1));
+		ItemCount->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+	//ItemCount->SetVisibility(CurrentCount > 0 ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+
+
+
+	//if (CurrentCount == 0)
+	//{
+	//	ItemImage->SetVisibility(ESlateVisibility::Hidden);
+	//	ItemCount->SetVisibility(ESlateVisibility::Hidden);
+	//	return;
+	//}
+	//else
+	//{
+	//	ItemImage->SetVisibility(ESlateVisibility::Visible);
+	//	ItemCount->SetVisibility(ESlateVisibility::Visible);
+	//}
+
+	//if (ItemData->MaxStackCount < CurrentCount)
+	//	CurrentCount = ItemData->MaxStackCount;
+
+	//ItemCount->SetText(FText::AsNumber(CurrentCount));
+	//ItemImage->SetBrushFromTexture(ItemData->Icon);
+
+	////InfoWidget->SetItemData(ItemData);
 
 }
 

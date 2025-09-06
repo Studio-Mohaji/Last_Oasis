@@ -4,20 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "../Data/DataAssetBase.h"
-
-#include "MyActor.generated.h"
-
-class UInventoryWidget;
+#include "../Data/RecipeState.h"
+#include "CraftingManager.generated.h"
 
 UCLASS()
-class LAST_OASIS_API AMyActor : public AActor
+class LAST_OASIS_API ACraftingManager : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AMyActor();
+	ACraftingManager();
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,10 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	TArray<FRecipeState> RecipeStates;
 
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	TArray<UDataAssetBase*> itemList;
 };
