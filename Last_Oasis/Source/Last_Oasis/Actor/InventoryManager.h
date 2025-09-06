@@ -39,13 +39,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void GetItem(UDataAssetBase* ItemData);
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void UpdateBroadCast();
 
 	// ===============Test=============
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void TestGetItem();
 
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void UpdateBroadCast();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UDataAssetBase* TestItemData;

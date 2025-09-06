@@ -5,10 +5,14 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+
+#include "../Widget/CraftingWidget.h"
+#include "../Widget/InventoryWidget.h"
+
 #include "PlayerCharacter.generated.h"
 
 struct FInputActionValue;
-
+struct FInventoryItem;
 UCLASS()
 class LAST_OASIS_API APlayerCharacter : public ACharacter,public IAbilitySystemInterface
 {
@@ -76,9 +80,39 @@ protected:
 private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void ToggleCraftFunction(const FInputActionValue& Value);
+	void ToggleInventoryFunction(const FInputActionValue& Value);
+	void InteractionFuction(const FInputActionValue& Value);
 
 private:
 	bool bIsInShadow;
 	UPROPERTY()
 	TObjectPtr<class ADirectionalLight> Sun;
+
+
+public:
+
+	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> CraftingWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCraftingWidget* CraftingWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	ACraftingManager* CraftingManager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> InventoryWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UInventoryWidget* InventoryWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	AInventoryManager* InventoryManager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	TArray<FInventoryItem> InventoryItems;
+
+
 };
