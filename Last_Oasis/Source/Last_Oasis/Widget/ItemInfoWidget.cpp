@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "../Data/DataAssetBase.h"
 #include "../Widget/ItemInfoWidget.h"
+#include "../Data/DataAssetBase.h"
 
 void UItemInfoWidget::SetItemData(UDataAssetBase* ItemData) const
 {

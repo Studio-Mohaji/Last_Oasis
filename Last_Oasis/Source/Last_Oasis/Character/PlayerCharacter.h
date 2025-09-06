@@ -39,6 +39,16 @@ private:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class ULOAbilitySystemComponent> ASC;
 
+	
+//Anim
+public:
+	FORCEINLINE virtual class UAnimMontage* GetAttackMontage() const { return AttackMonatage; }
+
+
+protected:
+	UPROPERTY(EditAnywhere, Category = Anim)
+	TObjectPtr<UAnimMontage> AttackMonatage;
+
 //input
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
@@ -80,6 +90,7 @@ protected:
 private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void InputPressed(int32 Value);
 	void ToggleCraftFunction(const FInputActionValue& Value);
 	void ToggleInventoryFunction(const FInputActionValue& Value);
 	void InteractionFuction(const FInputActionValue& Value);
