@@ -10,8 +10,8 @@ void UInGameHUD::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	SunTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/_shuby/Sun.Sun"));
-	MoonTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/_shuby/Moon.Moon"));
+	SunTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_Sun.MagicalGirl_Sun"));
+	MoonTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_DarkSun.MagicalGirl_DarkSun"));
 
 	UpdateTime(6, 0);
 }
