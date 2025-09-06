@@ -13,8 +13,16 @@ void UInGameHUD::NativeConstruct()
 	SunTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_Sun.MagicalGirl_Sun"));
 	MoonTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_DarkSun.MagicalGirl_DarkSun"));
 
+	InitProgress(Thirst, ThirstMID);
+	InitProgress(Hunger, HungerMID);
+	InitProgress(Temperature, TemperatureMID);
+
 	UpdateTime(6, 0);
 	UpdateDays(1);
+
+	UpdateProgress(ThirstMID, 0.9f);
+	UpdateProgress(HungerMID, 0.9f);
+	UpdateProgress(TemperatureMID, 0.5f);
 }
 
 void UInGameHUD::SetAbilitySystemComponent()
@@ -37,19 +45,28 @@ void UInGameHUD::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
 	Health->SetPercent(ChangeData.NewValue/100);
 }
 
-void UInGameHUD::OnHungerChanged(const FOnAttributeChangeData& ChangeData)
-{
-	Hunger->SetPercent(ChangeData.NewValue/100);
-}
-
 void UInGameHUD::OnThirstChanged(const FOnAttributeChangeData& ChangeData)
 {
-	Thirst->SetPercent(ChangeData.NewValue/100);
+	UpdateProgress(ThirstMID, ChangeData.NewValue / 100);
+
+	FString NewText = FString::Printf(TEXT("%.1f"), ChangeData.NewValue);
+	ThirstText->SetText(FText::FromString(NewText));
+}
+
+void UInGameHUD::OnHungerChanged(const FOnAttributeChangeData& ChangeData)
+{
+	UpdateProgress(HungerMID, ChangeData.NewValue/100);
+
+	FString NewText = FString::Printf(TEXT("%.1f"), ChangeData.NewValue);
+	HungerText->SetText(FText::FromString(NewText));
 }
 
 void UInGameHUD::OnTemperatureChanged(const FOnAttributeChangeData& ChangeData)
 {
-	Temperature->SetPercent(ChangeData.NewValue/100);
+	UpdateProgress(TemperatureMID, ChangeData.NewValue/36.5 * 0.5);
+
+	FString NewText = FString::Printf(TEXT("%.1f"), ChangeData.NewValue);
+	TemperatureText->SetText(FText::FromString(NewText));
 }
 
 void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
@@ -83,5 +100,26 @@ void UInGameHUD::UpdateDays(int32 Days)
 		FString NewText = FString::Printf(TEXT("%d Days"), Days);
 
 		DaysText->SetText(FText::FromString(NewText));
+	}
+}
+
+void UInGameHUD::InitProgress(UImage*& State, UMaterialInstanceDynamic*& MID)
+{	
+	if (State && State->GetBrush().GetResourceObject())
+	{
+		MID = UMaterialInstanceDynamic::Create(
+			Cast<UMaterialInterface>(State->GetBrush().GetResourceObject()),
+			this
+		);
+
+		State->SetBrushFromMaterial(MID);
+	}
+}
+
+void UInGameHUD::UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent)
+{
+	if (MID)
+	{
+		MID->SetScalarParameterValue(FName("Percent"), Percent);
 	}
 }
