@@ -32,7 +32,7 @@ private:
 	TObjectPtr<class UCameraComponent> FollowCamera;
 	
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<class UAbilitySystemComponent> ASC;
+	TObjectPtr<class ULOAbilitySystemComponent> ASC;
 
 //input
 protected:

@@ -51,10 +51,11 @@ protected:
 	FGameplayAttributeData MaxTemperature;
 	UPROPERTY(BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MinTemperature;
-	UPROPERTY(BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadWrite, Category = "Stat", meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Temperature;
 	UPROPERTY(BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Level;
 
 	friend class UInGameHUD;
+	friend class APlayerCharacter;
 };

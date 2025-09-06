@@ -11,6 +11,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GamePlayAbility/LOAbilitySystemComponent.h"
 #include "Player/LOPlayerState.h"
 
 // Sets default values
@@ -153,8 +154,12 @@ void APlayerCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
     if (ALOPlayerState* PS = GetPlayerState<ALOPlayerState>())
     {
-        ASC = PS->GetAbilitySystemComponent();
+        ASC = Cast<ULOAbilitySystemComponent>(PS->GetAbilitySystemComponent());
         ASC ->InitAbilityActorInfo(PS,this);
+        ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetHealthAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnHealthChanged);
+        ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetHungerAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnHungerChanged);
+        ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetThirstAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnThirstChanged);
+        ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetTemperatureAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnTemperatureChanged);
     }
     APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
     PlayerController->ConsoleCommand(TEXT("Showdebug Abilitysystem"));
