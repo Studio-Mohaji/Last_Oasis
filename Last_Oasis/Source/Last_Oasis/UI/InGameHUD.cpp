@@ -4,6 +4,17 @@
 #include "UI/InGameHUD.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Components/ProgressBar.h"
+#include "GameMode/LOGameModeBase.h"
+
+void UInGameHUD::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	SunTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/_shuby/Sun.Sun"));
+	MoonTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/_shuby/Moon.Moon"));
+
+	UpdateTime(6, 0);
+}
 
 void UInGameHUD::SetAbilitySystemComponent()
 {
@@ -38,4 +49,28 @@ void UInGameHUD::OnThirstChanged(const FOnAttributeChangeData& ChangeData)
 void UInGameHUD::OnTemperatureChanged(const FOnAttributeChangeData& ChangeData)
 {
 	Temperature->SetPercent(ChangeData.NewValue/100);
+}
+
+void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
+{
+	if (TimeText)
+	{
+		FString NewText = FString::Printf(TEXT("%d : %02d"), Hour, Minute);
+
+		TimeText->SetText(FText::FromString(NewText));
+
+		if(Day_Night)
+		{
+			int TotalMinutes = Hour * 60 + Minute;
+
+			if (TotalMinutes >= 6 * 60 && TotalMinutes < 20 * 60 + 24)
+			{
+				Day_Night->SetBrushFromTexture(SunTexture);
+			}
+			else
+			{
+				Day_Night->SetBrushFromTexture(MoonTexture);
+			}
+		}
+	}
 }

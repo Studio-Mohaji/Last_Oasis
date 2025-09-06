@@ -4,6 +4,8 @@
 #include "GameMode/LOGameModeBase.h"
 #include "Engine/DirectionalLight.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/InGameHUD.h"
+#include "Player/LOPlayerController.h"
 
 ALOGameModeBase::ALOGameModeBase()
 {
@@ -36,6 +38,13 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
     if (Minute != LastPrintedMinute)
     {
         LastPrintedMinute = Minute;
+
+		ALOPlayerController* PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+        if(PC && PC->HUD)
+        {
+            PC->HUD->UpdateTime(Hour, Minute);
+		}
+
         UE_LOG(LogTemp, Log, TEXT("현재 게임 시각: %02d:%02d"), Hour, Minute);
     }
     if (Sun == nullptr) return;
