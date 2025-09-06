@@ -93,4 +93,7 @@ public:
 public:
 	UFUNCTION()
 	void UpdateTime(int32 Hour, int32 Minute);
+
+	UFUNCTION()
+	void UpdateDays(int32 Days);
 };
