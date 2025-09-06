@@ -9,6 +9,8 @@
 #include "Components/Border.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Widget/InventoryWidget.h"
+#include "Widget/CraftingWidget.h"
 #include "InGameHUD.generated.h"
 
 UCLASS()
@@ -71,6 +73,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UImage> Crafting;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UInventoryWidget> InventoryWidget;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UCraftingWidget> CraftingWidget;
 
 	UTexture2D* SunTexture;
 	UTexture2D* MoonTexture;
