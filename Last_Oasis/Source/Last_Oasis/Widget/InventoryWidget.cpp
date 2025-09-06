@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "../Widget/InventoryWidget.h"
 #include "../Data/DataAssetBase.h"
 #include "../Data/ItemListDataAsset.h"
 #include "../Widget/ItemInfoWidget.h"
 #include "../Widget/InventorySlotWidget.h"
-#include "../Widget/InventoryWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 void UInventoryWidget::NativeConstruct()
@@ -76,7 +75,7 @@ void UInventoryWidget::UpdateSlot()
     TArray<FInventoryItem> UsableItems;
     TArray<FInventoryItem> NonUsableItems;
 
-    // ¾ÆÀÌÅÛ ºÐ·ù
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð·ï¿½
     for (int32 i = 0; i < ItemCount; ++i)
     {
         if (!InventoryManager->ItemDataList[i].ItemData) continue;
@@ -87,12 +86,12 @@ void UInventoryWidget::UpdateSlot()
             NonUsableItems.Add(InventoryManager->ItemDataList[i]);
     }
 
-    // Á¤·ÄµÈ ¹è¿­ »ý¼º
+    // ï¿½ï¿½ï¿½Äµï¿½ ï¿½è¿­ ï¿½ï¿½ï¿½ï¿½
     TArray<FInventoryItem> SortedItems;
     SortedItems.Append(UsableItems);
     SortedItems.Append(NonUsableItems);
 
-    // ½½·Ô¿¡ ¼¼ÆÃ
+    // ï¿½ï¿½ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½
     for (int32 i = 0; i < SlotCount; ++i)
     {
         UInventorySlotWidget* InventorySlot = InventorySlots[i];
