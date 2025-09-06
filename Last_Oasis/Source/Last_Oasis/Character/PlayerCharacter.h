@@ -104,8 +104,8 @@ private:
 public:
 
 	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UUserWidget> CraftingWidgetClass;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	//TSubclassOf<UUserWidget> CraftingWidgetClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCraftingWidget* CraftingWidget;
@@ -113,8 +113,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	ACraftingManager* CraftingManager;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UUserWidget> InventoryWidgetClass;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	//TSubclassOf<UUserWidget> InventoryWidgetClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UInventoryWidget* InventoryWidget;

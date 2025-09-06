@@ -21,6 +21,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UInGameHUD> HUDWidgetClass;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UInGameHUD> HUD;
 };

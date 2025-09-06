@@ -18,6 +18,7 @@
 #include "Player/LOPlayerState.h"
 #include "../Data/InventoryItemStruct.h"
 #include "../Actor/InventoryManager.h"
+#include "UI/InGameHUD.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -222,6 +223,8 @@ void APlayerCharacter::PossessedBy(AController* NewController)
     ALOPlayerController* PlayerController = CastChecked<ALOPlayerController>(NewController);
     PlayerController->ConsoleCommand(TEXT("Showdebug Abilitysystem"));
     PlayerController->InitHUD();
+    CraftingWidget = PlayerController->HUD->GetCraftingWidget();
+    InventoryWidget = PlayerController->HUD->GetInventoryWidget();
 }
 
 void APlayerCharacter::NotifyControllerChanged()
@@ -358,19 +361,7 @@ void APlayerCharacter::BeginPlay()
     InventoryManager = Cast<AInventoryManager>(
         UGameplayStatics::GetActorOfClass(GetWorld(), AInventoryManager::StaticClass()));
 
-    if (CraftingWidgetClass)
-    {
-        CraftingWidget = CreateWidget<UCraftingWidget>(GetWorld(), CraftingWidgetClass);
-        if (CraftingWidget)
-            CraftingWidget->AddToViewport();
-    }
 
-    if (InventoryWidgetClass)
-    {
-        InventoryWidget = CreateWidget<UInventoryWidget>(GetWorld(), InventoryWidgetClass);
-        if (InventoryWidget)
-            InventoryWidget->AddToViewport();
-    }
 
     InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
     CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
