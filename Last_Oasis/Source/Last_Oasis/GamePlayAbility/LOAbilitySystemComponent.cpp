@@ -85,6 +85,7 @@ void ULOAbilitySystemComponent::OnThirstChanged(const FOnAttributeChangeData& Da
 {
 	if (Data.NewValue >= 70.f)
 	{
+		
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Thirst.Hydrated")))
 		{
 			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Thirst"));

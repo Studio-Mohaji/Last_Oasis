@@ -161,6 +161,18 @@ void APlayerCharacter::PossessedBy(AController* NewController)
         ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetThirstAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnThirstChanged);
         ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetTemperatureAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnTemperatureChanged);
     }
+    for (const auto& StartAbility : StartAbilities)
+    {
+        FGameplayAbilitySpec StartSpec(StartAbility);
+        ASC->GiveAbility(StartSpec);
+    }
+
+    for (const auto& StartInputAbilitie : StartInputAbilities)
+    {
+        FGameplayAbilitySpec StartSpec(StartInputAbilitie.Value);
+        StartSpec.InputID = StartInputAbilitie.Key;
+        ASC->GiveAbility(StartSpec);
+    }
     APlayerController* PlayerController = CastChecked<APlayerController>(NewController);
     PlayerController->ConsoleCommand(TEXT("Showdebug Abilitysystem"));
 }

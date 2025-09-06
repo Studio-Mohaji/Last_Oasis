@@ -36,6 +36,12 @@ private:
 
 //input
 protected:
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
+	
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TMap<int32, TSubclassOf<class UGameplayAbility>> StartInputAbilities;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputMappingContext> InputMappingContext;
 	
