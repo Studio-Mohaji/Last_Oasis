@@ -26,4 +26,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector GoalPos;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float HP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxHP;
 };

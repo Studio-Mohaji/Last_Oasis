@@ -11,7 +11,7 @@ AEnemyCh::AEnemyCh()
 void AEnemyCh::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void AEnemyCh::Tick(float DeltaTime)
