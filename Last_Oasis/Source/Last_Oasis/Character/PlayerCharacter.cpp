@@ -266,6 +266,24 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
     }
 }
 
+void APlayerCharacter::InputPressed(int32 Value)
+{
+    FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(Value);
+
+    if (Spec)
+    {
+        Spec->InputPressed = true;
+        if (Spec->IsActive())
+        {
+            ASC->AbilitySpecInputPressed(*Spec);
+        }
+        else
+        {
+            ASC->TryActivateAbility(Spec->Handle);
+        }
+    }
+}
+
 void APlayerCharacter::ToggleCraftFunction(const FInputActionValue& Value)
 {
     if (!CraftingWidget || !InventoryWidget) return;
@@ -370,12 +388,11 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     
     EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
     EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+    EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::InputPressed, 0);
 
     EnhancedInputComponent->BindAction(Interaction, ETriggerEvent::Started, this, &APlayerCharacter::InteractionFuction);
-
-
     EnhancedInputComponent->BindAction(ToggleCraft, ETriggerEvent::Started, this, &APlayerCharacter::ToggleCraftFunction);
     EnhancedInputComponent->BindAction(ToggleInventory, ETriggerEvent::Started, this, &APlayerCharacter::ToggleInventoryFunction);
-
 }
+
 

@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "../Widget/InventorySlotWidget.h"
 #include "../Data/DataAssetBase.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "../Widget/ItemInfoWidget.h"
 #include "../Widget/InventoryWidget.h"
-#include "../Widget/InventorySlotWidget.h"
 
 void UInventorySlotWidget::NativeConstruct()
 {
@@ -32,7 +31,7 @@ FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, cons
 	MousePos.X -= 310.0f; 
 	InfoWidget->SetPositionInViewport(MousePos, true);
 	
-	// µ¥ÀÌÅÍ Àü´Þ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	InfoWidget->SetItemData(ItemData);
 
 	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
@@ -71,11 +70,11 @@ void UInventorySlotWidget::SetSlotData()
 		return;
 	}
 
-	// ½ºÅÃ Á¦ÇÑ Àû¿ë
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (CurrentCount > ItemData->MaxStackCount)
 		CurrentCount = ItemData->MaxStackCount;
 
-	// UI ¾÷µ¥ÀÌÆ®
+	// UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	ItemImage->SetBrushFromTexture(ItemData->Icon);
 	ItemImage->SetVisibility(ESlateVisibility::Visible);
 

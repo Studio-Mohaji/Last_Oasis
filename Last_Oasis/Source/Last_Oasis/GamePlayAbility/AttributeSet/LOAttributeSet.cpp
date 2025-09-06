@@ -29,13 +29,6 @@ void ULOAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	{
 		float Delta = GetThirst() - NewValue;
 		NewValue = GetThirst() - Delta * 0.75f;
-		UE_LOG(LogTemp,Log,TEXT("ASDASDD"));
-	}
-
-	if (Attribute == GetTemperatureAttribute() &&  (GetTemperature() - NewValue) < 0 && ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Game.Day")))
-	&& ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow"))))
-	{
-		NewValue -= 0.005;
 	}
 }
 
