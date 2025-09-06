@@ -74,14 +74,21 @@ protected:
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UImage> Crafting;
 
+	UTexture2D* SunTexture;
+	UTexture2D* MoonTexture;
+
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UInventoryWidget> InventoryWidget;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UCraftingWidget> CraftingWidget;
 
-	UTexture2D* SunTexture;
-	UTexture2D* MoonTexture;
+public:
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	UInventoryWidget* GetInventoryWidget() const { return InventoryWidget; }
+
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	UCraftingWidget* GetCraftingWidget() const { return CraftingWidget; }
 
 public:
 	UFUNCTION()
