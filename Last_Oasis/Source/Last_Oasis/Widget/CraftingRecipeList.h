@@ -23,7 +23,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	class UCraftingWidget* ParentCraftingWidget;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	UDataAssetBase* ItemData;
 

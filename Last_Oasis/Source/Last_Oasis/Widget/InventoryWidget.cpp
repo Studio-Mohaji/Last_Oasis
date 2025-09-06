@@ -6,13 +6,17 @@
 #include "../Widget/ItemInfoWidget.h"
 #include "../Widget/InventorySlotWidget.h"
 #include "../Widget/InventoryWidget.h"
-
+#include "Kismet/GameplayStatics.h"
 
 void UInventoryWidget::NativeConstruct()
 {
     Super::NativeConstruct();
-	UE_LOG(LogTemp, Warning, TEXT("InventoryWidget Constructed"));
+
+    InventoryManager = Cast<AInventoryManager>(
+        UGameplayStatics::GetActorOfClass(GetWorld(), AInventoryManager::StaticClass()));
+
     InitializeSlots();
+    UpdateSlot();
 }
 
 void UInventoryWidget::InitializeSlots()
@@ -28,14 +32,11 @@ void UInventoryWidget::InitializeSlots()
     {
         for (int32 Col = 0; Col < Columns; ++Col) 
         {
-            // 슬롯 위젯 생성
             UInventorySlotWidget* NewSlot = CreateWidget<UInventorySlotWidget>(GetWorld(), ItemSlotWidgetClass);
             if (!NewSlot) continue;
 
-            // 부모 위젯 세팅
             NewSlot->ParentInventoryWidget = this;
 
-            // GridPanel에 추가
             UGridSlot* GridSlot = GridBox->AddChildToGrid(NewSlot);
             if (GridSlot)
             {
@@ -43,20 +44,34 @@ void UInventoryWidget::InitializeSlots()
                 GridSlot->SetColumn(Col);
             }
 
-            // 배열에 저장
             InventorySlots.Add(NewSlot);
 
             NewSlot->ItemImage->SetVisibility(ESlateVisibility::Hidden);
             NewSlot->ItemCount->SetVisibility(ESlateVisibility::Hidden);
+            NewSlot->OnSlotClicked.AddDynamic(this, &UInventoryWidget::HandleSlotClicked);
+            UE_LOG(LogTemp, Warning, TEXT("Slot binding~~~"));
         }
     }
+
+	InventoryManager->OnInventoryUpdated.AddDynamic(this, &UInventoryWidget::UpdateSlot);
 }
 
+void UInventoryWidget::HandleSlotClicked(UInventorySlotWidget* ClickedSlot)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Slot Clicked~~~"));
+    UE_LOG(LogTemp, Warning, TEXT("Slot Clicked: %s"),
+        ClickedSlot->ItemData ? *ClickedSlot->ItemData->GetName() : TEXT("No ItemData"));
+    if (InventoryManager)
+    {
+        InventoryManager->UseItem(ClickedSlot->ItemData);
+    }
+    UpdateSlot();
+}
 
 void UInventoryWidget::UpdateSlot()
 {
     const int32 SlotCount = InventorySlots.Num();
-    const int32 ItemCount = TestItemDataList.Num();
+    const int32 ItemCount = InventoryManager->ItemDataList.Num();
 
     TArray<FInventoryItem> UsableItems;
     TArray<FInventoryItem> NonUsableItems;
@@ -64,12 +79,12 @@ void UInventoryWidget::UpdateSlot()
     // 아이템 분류
     for (int32 i = 0; i < ItemCount; ++i)
     {
-        if (!TestItemDataList[i].ItemData) continue;
+        if (!InventoryManager->ItemDataList[i].ItemData) continue;
 
-        if (TestItemDataList[i].ItemData->IsUsable)
-            UsableItems.Add(TestItemDataList[i]);
+        if (InventoryManager->ItemDataList[i].ItemData->IsUsable)
+            UsableItems.Add(InventoryManager->ItemDataList[i]);
         else
-            NonUsableItems.Add(TestItemDataList[i]);
+            NonUsableItems.Add(InventoryManager->ItemDataList[i]);
     }
 
     // 정렬된 배열 생성
@@ -99,3 +114,13 @@ void UInventoryWidget::UpdateSlot()
 
 
 }
+
+void UInventoryWidget::UseItem()
+{
+}
+
+void UInventoryWidget::GetItem(UDataAssetBase* ItemData)
+{
+
+}    
+

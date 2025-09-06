@@ -11,6 +11,10 @@
 class UDataAssetBase;
 class UItemInfoWidget;
 class UInventoryWidget;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotClicked, UInventorySlotWidget*, ClickedSlot);
+
+
 /**
  * 
  */
@@ -45,6 +49,12 @@ public:
     virtual void NativeConstruct() override;
     virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
     virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+
+
+    UPROPERTY(BlueprintAssignable, Category = "Inventory")
+    FOnSlotClicked OnSlotClicked;
+
+  virtual FReply NativeOnMouseButtonDown( const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
     UFUNCTION(BlueprintCallable, Category = "Inventory")
     void SetSlotData();

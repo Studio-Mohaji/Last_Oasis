@@ -6,10 +6,12 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
+#include "../Data/RecipeState.h"
 #include "CraftingItemList.generated.h"
 
 class UDataAssetBase;
 class UCraftingWidget;
+class ACraftingManager;
 /**
  * 
  */
@@ -21,9 +23,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	class UCraftingWidget* ParentCraftingWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	ACraftingManager* CraftingManager;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
-	UDataAssetBase* ItemData;
+	FRecipeResource ResourceData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	int32 InventoryItemCount;
+
+	bool bIsSufficientResource = false;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CraftingResourceName;

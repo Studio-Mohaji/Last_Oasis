@@ -5,13 +5,18 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
+#include "Components/CanvasPanel.h"
 #include "../Actor/CraftingManager.h"
+#include "../Data/RecipeState.h"
+#include "../Actor/InventoryManager.h"
 #include "CraftingWidget.generated.h"
 
 
 class UCraftingItemList;
 class UCraftingRecipeList;
+
 /**
  * 
  */
@@ -32,15 +37,26 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UVerticalBox* CraftingItemList;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* CraftingItemName;
+
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* CraftingUIBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	TSubclassOf<UCraftingRecipeList> CraftRecipeClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	TSubclassOf<UCraftingItemList> CraftingItemClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	ACraftingManager* CraftingManager;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	AInventoryManager* InventoryManager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	FRecipeState SelectedRecipeState;
 
 	UPROPERTY()
 	TArray<UCraftingRecipeList*> RecipeListArray;
@@ -52,5 +68,11 @@ public:
 	void UpdateSelection(UCraftingRecipeList* SelectedRecipe);
 
 	UFUNCTION(BlueprintCallable, Category = "Crafting")
-	void Crafting();
+	void CraftingRecipeUpdate();
+
+	UFUNCTION(BlueprintCallable, Category = "Crafting")
+	void CraftingItemUpdate();
+
+	UFUNCTION(BlueprintCallable, Category = "Crafting")
+	void CraftingItem();
 };

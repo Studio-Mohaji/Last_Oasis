@@ -44,6 +44,23 @@ void UInventorySlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 		InfoWidget->RemoveFromParent();
 }
 
+FReply UInventorySlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Slot Clicked?"));
+
+	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton &&
+		ItemData->IsUsable)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Slot Clicked!"));
+		OnSlotClicked.Broadcast(this);
+		SetSlotData();
+		return FReply::Handled();
+	}
+
+
+	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+}
+
 void UInventorySlotWidget::SetSlotData()
 {
 
@@ -72,30 +89,6 @@ void UInventorySlotWidget::SetSlotData()
 		ItemCount->SetText(FText::AsNumber(1));
 		ItemCount->SetVisibility(ESlateVisibility::Hidden);
 	}
-
-	//ItemCount->SetVisibility(CurrentCount > 0 ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
-
-
-
-	//if (CurrentCount == 0)
-	//{
-	//	ItemImage->SetVisibility(ESlateVisibility::Hidden);
-	//	ItemCount->SetVisibility(ESlateVisibility::Hidden);
-	//	return;
-	//}
-	//else
-	//{
-	//	ItemImage->SetVisibility(ESlateVisibility::Visible);
-	//	ItemCount->SetVisibility(ESlateVisibility::Visible);
-	//}
-
-	//if (ItemData->MaxStackCount < CurrentCount)
-	//	CurrentCount = ItemData->MaxStackCount;
-
-	//ItemCount->SetText(FText::AsNumber(CurrentCount));
-	//ItemImage->SetBrushFromTexture(ItemData->Icon);
-
-	////InfoWidget->SetItemData(ItemData);
 
 }
 
