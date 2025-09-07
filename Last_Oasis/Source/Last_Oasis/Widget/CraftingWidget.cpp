@@ -19,6 +19,11 @@ void UCraftingWidget::NativeConstruct()
 
 	CraftingUIBox->SetVisibility(ESlateVisibility::Hidden);
 
+    if (InventoryManager)
+    {
+        InventoryManager->OnRecipeUpdated.AddDynamic(this, &UCraftingWidget::CraftingRecipeUpdate);
+    }
+
 	CraftingRecipeInitialize();
 
 }
@@ -64,7 +69,6 @@ void UCraftingWidget::CraftingRecipeInitialize()
             }
         }
     }
-
 }
 
 void UCraftingWidget::UpdateSelection(UCraftingRecipeList* SelectedRecipe)
@@ -107,7 +111,50 @@ void UCraftingWidget::UpdateSelection(UCraftingRecipeList* SelectedRecipe)
 // 켜고 끌때마다 업데이트
 void UCraftingWidget::CraftingRecipeUpdate()
 {
+    if (!CraftingManager) return;
 
+    TArray<UUserWidget*> UnlockedWidgets;
+    TArray<UUserWidget*> LockedWidgets;
+
+    // 기존 위젯 분류
+    for (int32 i = 0; i < RecipeListArray.Num(); ++i)
+    {
+        UCraftingRecipeList* Widget = RecipeListArray[i];
+        if (!Widget) continue;
+
+        const FRecipeState& RecipeState = CraftingManager->RecipeStates[i];
+
+        // 데이터 갱신
+        Widget->ItemData = RecipeState.RecipeItem;
+        Widget->SetRecipeData();
+
+        // Visible 처리
+        if (RecipeState.bUnlocked)
+        {
+            Widget->SetVisibility(ESlateVisibility::Visible);
+            UnlockedWidgets.Add(Widget);
+        }
+        else
+        {
+            Widget->SetVisibility(ESlateVisibility::Hidden);
+            LockedWidgets.Add(Widget);
+        }
+    }
+
+    // UI 순서 재배치
+    CraftingRecipeList->ClearChildren();
+
+    for (UUserWidget* Widget : UnlockedWidgets)
+    {
+        CraftingRecipeList->AddChild(Widget);
+    }
+
+    for (UUserWidget* Widget : LockedWidgets)
+    {
+        CraftingRecipeList->AddChild(Widget);
+    }
+
+    //CraftingRecipeInitialize();
 	// 레시피 업데이트할때, ItemList도 업데이트
     CraftingItemUpdate();
 }
@@ -154,8 +201,6 @@ void UCraftingWidget::CraftingItemUpdate()
 
 void UCraftingWidget::CraftingItem()
 {
-
-    // 1. 레시피 재료 차감
     for (const FRecipeResource& Resource : SelectedRecipeState.RequiredResources)
     {
         for (FInventoryItem& InventoryItem : InventoryManager->ItemDataList)
@@ -168,7 +213,6 @@ void UCraftingWidget::CraftingItem()
         }
     }
 
-    // 2. 제작 아이템 인벤토리에 추가
     bool bFound = false;
     for (FInventoryItem& InventoryItem : InventoryManager->ItemDataList)
     {
@@ -179,8 +223,6 @@ void UCraftingWidget::CraftingItem()
             break;
         }
     }
-
-    // 인벤토리에 없으면 새로 추가
     if (!bFound)
     {
         InventoryManager->ItemDataList.Add(FInventoryItem{ SelectedRecipeState.RecipeItem, 1 });

@@ -47,12 +47,21 @@ void UInventoryWidget::InitializeSlots()
 
             NewSlot->ItemImage->SetVisibility(ESlateVisibility::Hidden);
             NewSlot->ItemCount->SetVisibility(ESlateVisibility::Hidden);
-            NewSlot->OnSlotClicked.AddDynamic(this, &UInventoryWidget::HandleSlotClicked); // 51
+            NewSlot->OnSlotClicked.AddDynamic(this, &UInventoryWidget::HandleSlotClicked);
             UE_LOG(LogTemp, Warning, TEXT("Slot binding~~~"));
         }
     }
 
 	InventoryManager->OnInventoryUpdated.AddDynamic(this, &UInventoryWidget::UpdateSlot);
+
+
+    if (!ItemInfoWidget)
+    {
+        ItemInfoWidget = CreateWidget<UItemInfoWidget>(GetWorld(), ItemInfoWidgetClass);
+        ItemInfoWidget->AddToViewport();
+        ItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
+    }
+
 }
 
 void UInventoryWidget::HandleSlotClicked(UInventorySlotWidget* ClickedSlot)

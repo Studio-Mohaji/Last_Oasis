@@ -29,7 +29,13 @@ public:
     UItemInfoWidget* ItemInfoWidget;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    TSubclassOf<UItemInfoWidget> ItemInfoWidgetClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     TSubclassOf<UInventorySlotWidget> ItemSlotWidgetClass;
+
+    UPROPERTY()
+    TArray<UInventorySlotWidget*> InventorySlots;
 
     UPROPERTY(meta = (BindWidget))
     UGridPanel* GridBox;
@@ -42,27 +48,27 @@ public:
 
     // ===============Test=============
 
-    // 임시 데이터 세팅 -> 이후 플레이어한테서 가져오기
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	TArray<FInventoryItem> TestItemDataList;
-	//UItemListDataAsset* InventoryItems;
+ //   // 임시 데이터 세팅 -> 이후 플레이어한테서 가져오기
+ //   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	//TArray<FInventoryItem> TestItemDataList;
+	////UItemListDataAsset* InventoryItems;
 
 
 
-    UPROPERTY(meta = (BindWidget))
-    UButton* TestButton2;
+ //   UPROPERTY(meta = (BindWidget))
+ //   UButton* TestButton2;
 
 
 
-    UFUNCTION(BlueprintCallable)
-    void UseItem();
 
     // =================================
-    UPROPERTY()
-    TArray<UInventorySlotWidget*> InventorySlots;
-
+    UFUNCTION(BlueprintCallable)
+    void UseItem();
     UFUNCTION(BlueprintCallable)
     void GetItem(UDataAssetBase* ItemData);
+
+    // =================================
+
 
     virtual void NativeConstruct() override;
 

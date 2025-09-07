@@ -17,7 +17,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
 
 public:	
 
@@ -40,9 +39,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackRange;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Damage;
-	
 	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
 	void DecreaseHP(float Value);
 protected:

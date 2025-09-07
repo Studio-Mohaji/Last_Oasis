@@ -19,7 +19,10 @@ FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, cons
 
 	if (ItemImage->GetVisibility() == ESlateVisibility::Hidden)
 		return FReply::Unhandled();
-	
+
+	if (!ParentInventoryWidget || !ParentInventoryWidget->ItemInfoWidget)
+		return FReply::Unhandled();
+
 	if (!InfoWidget->IsInViewport())
 	{
 		InfoWidget = ParentInventoryWidget->ItemInfoWidget;
@@ -31,10 +34,15 @@ FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, cons
 	MousePos.X -= 310.0f; 
 	InfoWidget->SetPositionInViewport(MousePos, true);
 	
-	// ������ ����
-	InfoWidget->SetItemData(ItemData);
+	// 아이템 데이터 설정 (nullptr 체크)
+	if (ItemData && InfoWidget)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Set Item Data xxx"));
+		InfoWidget->SetItemData(ItemData);
+	}
 
-	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
+
+	return Super::NativeOnMouseMove(InGeometry, InMouseEvent); //45
 }
 
 void UInventorySlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)

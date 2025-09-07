@@ -87,19 +87,28 @@ protected:
 	TObjectPtr<class UTextBlock> GoalBarText;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UImage> GoalArrow;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UBorder> Inventory;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UBorder> Crafting;
-
-	UTexture2D* SunTexture;
-	UTexture2D* MoonTexture;
+	TObjectPtr<class UBorder> Crafting;	
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UInventoryWidget> InventoryWidget;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UCraftingWidget> CraftingWidget;
+
+	UTexture2D* SunTexture;
+	UTexture2D* MoonTexture;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FString> GoalTexts;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FString> GoalBarTexts;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
@@ -120,4 +129,19 @@ public:
 
 	UFUNCTION()
     void UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent);
+
+	UFUNCTION()
+	void OpenGoal(bool bIsOpen);
+
+	UFUNCTION()
+	void SetGoalText(int32 Phase);
+
+	FTimerHandle BorderMoveTimerHandle;
+	float ElapsedTime;
+	float TotalDuration;
+	FVector2D StartPos;
+	FVector2D EndPos;
+	TObjectPtr<UBorder> TargetBorder;
+
+	void UpdateBorderPosition();
 };

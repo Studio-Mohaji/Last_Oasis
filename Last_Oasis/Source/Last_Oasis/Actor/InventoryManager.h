@@ -9,8 +9,23 @@
 #include "InventoryManager.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRecipeUpdated);
 
 class AInteractiveActor;
+class ACraftingManager;
+
+USTRUCT(BlueprintType, Blueprintable)
+struct FRecipeUnlockedStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UDataAssetBase* BlueprintItemData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UDataAssetBase* ItemData;
+
+};
 
 UCLASS()
 class LAST_OASIS_API AInventoryManager : public AActor
@@ -29,8 +44,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	ACraftingManager* CraftingManager;
+
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnInventoryUpdated OnInventoryUpdated;
+
+	UPROPERTY(BlueprintAssignable, Category = "Inventory")
+	FOnRecipeUpdated OnRecipeUpdated;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TArray<FInventoryItem> ItemDataList;
@@ -41,8 +62,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void GetItem(AInteractiveActor* InteractiveActor);
 
+	void CheckRecipe(UDataAssetBase* ItemData);
+
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void UpdateBroadCast();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void UpdateRecipeBroadCast();
 
 	// ===============Test=============
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
@@ -51,5 +77,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UDataAssetBase* TestItemData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")	
+	TArray<FRecipeUnlockedStruct> RecipeItems;
 
 };
