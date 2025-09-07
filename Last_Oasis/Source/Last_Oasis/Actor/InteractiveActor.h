@@ -7,6 +7,27 @@
 #include "InteractiveActor.generated.h"
 
 class UDataAssetBase;;
+
+USTRUCT(BlueprintType)
+struct FDropItemData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataAssetBase* DropItemData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DropChance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 DropMinRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 DropMaxRange; 
+};
+
+
+
 UCLASS()
 class LAST_OASIS_API AInteractiveActor : public AActor
 {
@@ -25,6 +46,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	UDataAssetBase* ActorData;
+	TArray<FDropItemData> DropItems;
 
 };

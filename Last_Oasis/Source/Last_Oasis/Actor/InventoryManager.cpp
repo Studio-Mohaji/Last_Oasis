@@ -3,6 +3,8 @@
 
 #include "../Actor/InventoryManager.h"
 
+#include "Actor/InteractiveActor.h"
+
 // Sets default values
 AInventoryManager::AInventoryManager()
 {
@@ -54,49 +56,118 @@ void AInventoryManager::UseItem(UDataAssetBase* ItemData)
 }
 
 
-void AInventoryManager::GetItem(UDataAssetBase* ItemData)
+void AInventoryManager::GetItem(AInteractiveActor* InteractiveActor)
 {
-    if (!ItemData) return;
+    if (!InteractiveActor) return;
 
-    bool bItemFound = false;
-
-    for (int32 i = 0; i < ItemDataList.Num(); i++)
+    for (const FDropItemData& DropData : InteractiveActor->DropItems)
     {
-        FInventoryItem& item = ItemDataList[i];
+        if (!DropData.DropItemData) continue;
 
-        if (item.ItemData == ItemData)
+        int32 RandomRoll = FMath::RandRange(1, 100);
+        if (RandomRoll > DropData.DropChance) // 획득 실패
+            continue; 
+
+        // 드랍 개수
+        int32 DropCount = FMath::RandRange(DropData.DropMinRange, DropData.DropMaxRange);
+
+        // 아이템 획득
+        for (int32 i = 0; i < DropCount; i++)
         {
-            bItemFound = true;
+            UDataAssetBase* ItemData = DropData.DropItemData;
+            if (!ItemData) continue;
 
-            if (item.ItemData->IsStackable)
+            bool bItemFound = false;
+
+            for (int32 j = 0; j < ItemDataList.Num(); j++)
             {
-                if (item.CurrentCount <= item.ItemData->MaxStackCount)
+                FInventoryItem& item = ItemDataList[j];
+
+                if (item.ItemData == ItemData)
                 {
-                    item.CurrentCount++;
-                    UE_LOG(LogTemp, Warning, TEXT("get Item"));
-                    UpdateBroadCast();
+                    bItemFound = true;
+
+                    if (item.ItemData->IsStackable)
+                    {
+                        if (item.CurrentCount < item.ItemData->MaxStackCount)
+                        {
+                            item.CurrentCount++;
+                            UE_LOG(LogTemp, Warning, TEXT("Added stack of item: %s"), *ItemData->ItemName.ToString());
+                            UpdateBroadCast();
+                        }
+                    }
+                    else
+                    {
+                        UE_LOG(LogTemp, Warning, TEXT("You can't have duplicated item: %s"), *ItemData->ItemName.ToString());
+                    }
+                    break; 
                 }
             }
-            else
-            {
-                UE_LOG(LogTemp, Warning, TEXT("You can't have duplicated item."))
-            }
-            return; // 이미 처리했으면 함수 종료
 
+            // 기존 인벤토리에 없는 아이템이라면 새로 추가
+            if (!bItemFound)
+            {
+                FInventoryItem NewItem;
+                NewItem.ItemData = ItemData;
+                NewItem.CurrentCount = 1;
+                ItemDataList.Add(NewItem);
+
+                UE_LOG(LogTemp, Warning, TEXT("New item added to inventory: %s"), *ItemData->ItemName.ToString());
+
+                UpdateBroadCast();
+            }
         }
     }
 
-    if (!bItemFound)
-    {
-        FInventoryItem NewItem;
-        NewItem.ItemData = ItemData;
-        NewItem.CurrentCount = 1;
-        ItemDataList.Add(NewItem);
-       
-        UE_LOG(LogTemp, Warning, TEXT("New item added to inventory: %s"), *ItemData->ItemName.ToString());
+ //   InteractiveActor.DropItems[0].DropItemData; // 드랍 아이템 정보
+	//InteractiveActor.DropItems[0].DropChance; // 드랍 확률 float 확률 Chance/100
+ //   InteractiveActor.DropItems[0].DropMaxRange; // 최대 드랍 개수
+ //   InteractiveActor.DropItems[0].DropMinRange; // 최소 드랍 개수
+ //   
 
-        UpdateBroadCast();
-    }
+ //   UDataAssetBase* ItemData = InteractiveActor.DropItems[0].DropItemData;
+
+ //   if (!ItemData) return;
+
+ //   bool bItemFound = false;
+
+ //   for (int32 i = 0; i < ItemDataList.Num(); i++)
+ //   {
+ //       FInventoryItem& item = ItemDataList[i];
+
+ //       if (item.ItemData == ItemData)
+ //       {
+ //           bItemFound = true;
+
+ //           if (item.ItemData->IsStackable)
+ //           {
+ //               if (item.CurrentCount <= item.ItemData->MaxStackCount)
+ //               {
+ //                   item.CurrentCount++;
+ //                   UE_LOG(LogTemp, Warning, TEXT("get Item"));
+ //                   UpdateBroadCast();
+ //               }
+ //           }
+ //           else
+ //           {
+ //               UE_LOG(LogTemp, Warning, TEXT("You can't have duplicated item."))
+ //           }
+ //           return; // 이미 처리했으면 함수 종료
+
+ //       }
+ //   }
+
+ //   if (!bItemFound)
+ //   {
+ //       FInventoryItem NewItem;
+ //       NewItem.ItemData = ItemData;
+ //       NewItem.CurrentCount = 1;
+ //       ItemDataList.Add(NewItem);
+ //      
+ //       UE_LOG(LogTemp, Warning, TEXT("New item added to inventory: %s"), *ItemData->ItemName.ToString());
+
+ //       UpdateBroadCast();
+ //   }
 }
 
 void AInventoryManager::TestGetItem()

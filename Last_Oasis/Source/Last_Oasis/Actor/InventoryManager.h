@@ -10,6 +10,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
+class AInteractiveActor;
+
 UCLASS()
 class LAST_OASIS_API AInventoryManager : public AActor
 {
@@ -37,7 +39,7 @@ public:
 	void UseItem(UDataAssetBase* ItemData);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void GetItem(UDataAssetBase* ItemData);
+	void GetItem(AInteractiveActor* InteractiveActor);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void UpdateBroadCast();
