@@ -6,6 +6,7 @@
 #include "../Actor/CraftingManager.h"
 #include "../Character/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameMode/LOGameModeBase.h"
 
 // Sets default values
 AOasisEventManager::AOasisEventManager()
@@ -20,6 +21,10 @@ void AOasisEventManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	AGameModeBase* GameMode = UGameplayStatics::GetGameMode(GetWorld());
+	ALOGameModeBase* LOGameMode = Cast<ALOGameModeBase>(GameMode);
+
+	LOGameMode->BuildingB->getLocation
 
 	CraftingManager= Cast<ACraftingManager>(
 		UGameplayStatics::GetActorOfClass(GetWorld(), ACraftingManager::StaticClass()));
