@@ -16,43 +16,59 @@ void UInventorySlotWidget::NativeConstruct()
 
 FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Mouse Move"));
 
-	if (ItemImage->GetVisibility() == ESlateVisibility::Hidden)
-		return FReply::Unhandled();
-
-	if (!InfoWidget)
+	if (InfoWidget && InfoWidget->GetVisibility() == ESlateVisibility::Visible)
 	{
-		if (!ParentInventoryWidget || !ParentInventoryWidget->ItemInfoWidget)
-			return FReply::Unhandled();
-
-		InfoWidget = ParentInventoryWidget->ItemInfoWidget;
+		FVector2D MousePos = InMouseEvent.GetScreenSpacePosition();
+		MousePos.Y -= 150.0f;
+		MousePos.X -= 420.0f;
+		InfoWidget->SetPositionInViewport(MousePos, true);
 	}
-	
-	if (InfoWidget->GetVisibility() != ESlateVisibility::Visible)
-		InfoWidget->SetVisibility(ESlateVisibility::Visible);
 
+	return Super::NativeOnMouseMove(InGeometry, InMouseEvent);
+}
 
+void UInventorySlotWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 
-	FVector2D MousePos = InMouseEvent.GetScreenSpacePosition();
-	MousePos.Y -= 170.0f; 
-	MousePos.X -= 310.0f; 
-	InfoWidget->SetPositionInViewport(MousePos, true);
-	
-	// 아이템 데이터 설정 (nullptr 체크)
-	if (ItemData && InfoWidget)
+	UE_LOG(LogTemp, Warning, TEXT("Mouse Enter"));
+
+	if (!ItemImage || ItemImage->GetVisibility() == ESlateVisibility::Hidden)
+		return;
+
+	if (!ParentInventoryWidget || !ParentInventoryWidget->ItemInfoWidget)
+		return;
+
+	if (LastHoveredSlot == this) return;
+
+	InfoWidget = ParentInventoryWidget->ItemInfoWidget;
+
+	if (!InfoWidget->IsInViewport())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Set Item Data xxx"));
+		InfoWidget->AddToViewport(9999);
+	}
+
+	if (InfoWidget->GetVisibility() != ESlateVisibility::Visible)
+	{
+		InfoWidget->SetVisibility(ESlateVisibility::Visible);
 		InfoWidget->SetItemData(ItemData);
 	}
-
-
-	return Super::NativeOnMouseMove(InGeometry, InMouseEvent); //45
+	LastHoveredSlot = this;
 }
 
 void UInventorySlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Mouse Leave"));
+	Super::NativeOnMouseLeave(InMouseEvent);
+
+	if (LastHoveredSlot != this) return;
+
 	if (InfoWidget && InfoWidget->IsInViewport())
 		InfoWidget->SetVisibility(ESlateVisibility::Hidden);
+
+	LastHoveredSlot = nullptr;
 }
 
 FReply UInventorySlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

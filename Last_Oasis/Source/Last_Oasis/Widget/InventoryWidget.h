@@ -48,17 +48,6 @@ public:
 
     // ===============Test=============
 
- //   // 임시 데이터 세팅 -> 이후 플레이어한테서 가져오기
- //   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	//TArray<FInventoryItem> TestItemDataList;
-	////UItemListDataAsset* InventoryItems;
-
-
-
- //   UPROPERTY(meta = (BindWidget))
- //   UButton* TestButton2;
-
-
 
 
     // =================================

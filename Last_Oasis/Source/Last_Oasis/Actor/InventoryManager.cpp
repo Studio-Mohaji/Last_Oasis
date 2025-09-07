@@ -8,15 +8,11 @@
 #include "Character/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values
 AInventoryManager::AInventoryManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
-// Called when the game starts or when spawned
 void AInventoryManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -27,7 +23,6 @@ void AInventoryManager::BeginPlay()
     UE_LOG(LogTemp, Warning, TEXT("BeginPlay RecipeItems.Num = %d"), RecipeItems.Num());
 }
 
-// Called every frame
 void AInventoryManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -49,18 +44,17 @@ void AInventoryManager::UseItem(UDataAssetBase* ItemData)
             {
                 UE_LOG(LogTemp, Warning, TEXT("Use Item"));
 
-                // TODO: 아이템 사용 효과
                 APlayerCharacter* PC = Cast<APlayerCharacter>(
                     UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
                 if (PC && ItemData->UseValue != 0.f)
                 {
-                    //if (ItemData == UsableItemDatas[2]) // 음식
-                    //    PC->InputPressed(2);
-                    //else if (ItemData == UsableItemDatas[3]) // 물
-                    //    PC->InputPressed(3);
-                    //else if (ItemData == UsableItemDatas[4]) // 붕대
-                    //    PC->InputPressed(4);
+                    if (ItemData == UsableItemDatas[2]) // 음식
+                        PC->InputPressed(2);
+                    else if (ItemData == UsableItemDatas[3]) // 물
+                        PC->InputPressed(3);
+                    else if (ItemData == UsableItemDatas[4]) // 붕대
+                        PC->InputPressed(4);
                 }
 
 
@@ -80,9 +74,8 @@ void AInventoryManager::UseItem(UDataAssetBase* ItemData)
 
 void AInventoryManager::GetItem(AInteractiveActor* InteractiveActor)
 {
-    UE_LOG(LogTemp, Error, TEXT("----------------------------------------------------------------------"));
     if (!InteractiveActor) return;
-    UE_LOG(LogTemp, Error, TEXT("======================================================================="));
+
     for (const FDropItemData& DropData : InteractiveActor->DropItems)
     {
         if (!DropData.DropItemData) continue;
@@ -193,40 +186,6 @@ void AInventoryManager::TestGetItem()
 
 void AInventoryManager::CheckRecipe(UDataAssetBase* ItemData)
 {
-   // // 사용한 소모품 데이터 ItemData
-   // for (int i = 0; i < RecipeItems.Num(); i++)
-   // {
-   //     // RecipeItems(레시피 데이터) 인지 체크하기
-   //     if (ItemData == RecipeItems[i].BlueprintItemData)
-   //     {
-   //         // 해당 RecipeItems[i].BlueprintItemData에 해당하는 RecipeItems[i].ItemData 획득
-   //          
-			//// RecipeItems[i].ItemData과 RecipeState의 RecipeItem 비교
-   //         
-			//// 같은거 찾으면, RecipeState의 bUnlocked true로 바꾸기
-
-			//// CraftingWidget에서 레시피 UI 업데이트
-   //         UpdateRecipeBroadCast();
-
-   //         // 사용한 레시피는 제거
-   //         RecipeItems.RemoveAt(i);
-   //         // 같은게 없으면 넘기기.
-   //        
-   //         
-			//// 그럼 레시피 데이터에 따라서 CraftingManager->RecipeStates의 특정 Recipe의 bUnlocked true로 바꾸기
- 
-			//CraftingManager->RecipeStates[i].RecipeItem == RecipeItems[i].ItemData;
-			//	CraftingManager->RecipeStates[i].bUnlocked = true;
-
-
-
-
-   //         UpdateRecipeBroadCast();
-   //         RecipeItems.RemoveAt(i);
-   //         return;
-   //     }
-   // }
-
 
     for (int32 i = RecipeItems.Num() - 1; i >= 0; --i) // 뒤에서 앞으로 반복하면 RemoveAt 안전
     {
@@ -252,9 +211,6 @@ void AInventoryManager::CheckRecipe(UDataAssetBase* ItemData)
             //RecipeItems.RemoveAt(i);
         }
     }
-
-
-
 }
 
 void AInventoryManager::UpdateBroadCast()

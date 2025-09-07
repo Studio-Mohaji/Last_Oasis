@@ -48,8 +48,8 @@ public:
 
     virtual void NativeConstruct() override;
     virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+    virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
     virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
-
 
     UPROPERTY(BlueprintAssignable, Category = "Inventory")
     FOnSlotClicked OnSlotClicked;
@@ -60,5 +60,8 @@ public:
     void SetSlotData();
 
     void SetOptionVisible();
+
+    UPROPERTY()
+    UInventorySlotWidget* LastHoveredSlot = nullptr;
 
 };
