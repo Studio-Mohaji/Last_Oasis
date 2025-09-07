@@ -19,9 +19,3 @@ void AEnemyCh::BeginPlay()
 	Player = Cast<APlayerCharacter>(FoundActor);
 }
 
-void AEnemyCh::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
