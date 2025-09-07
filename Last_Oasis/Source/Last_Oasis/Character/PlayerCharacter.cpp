@@ -18,6 +18,8 @@
 #include "Player/LOPlayerState.h"
 #include "../Data/InventoryItemStruct.h"
 #include "../Actor/InventoryManager.h"
+#include "Components/BoxComponent.h"
+#include "Enemys/EnemyCh.h"
 #include "UI/InGameHUD.h"
 
 // Sets default values
@@ -144,6 +146,29 @@ APlayerCharacter::APlayerCharacter()
     {
         ToggleMission = InputActionToggleMissionRef.Object;
     }
+
+    WeaponRange1 = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponRange1"));
+    WeaponRange2 = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponRange2"));
+    WeaponRange3 = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponRange3"));
+
+    // ===== WeaponRange1 =====
+    WeaponRange1->SetRelativeLocation(FVector(68.929525f, 22.923540f, -18.492470f));
+    WeaponRange1->SetRelativeRotation(FRotator(0.f, -180.f, 0.f));
+    WeaponRange1->SetRelativeScale3D(FVector(3.04f, 0.79f, 1.79f));
+
+    // ===== WeaponRange2 =====
+    WeaponRange2->SetRelativeLocation(FVector(118.817743f, 26.265058f, -18.492470f));
+    WeaponRange2->SetRelativeRotation(FRotator(0.f, -180.f, 0.f));
+    WeaponRange2->SetRelativeScale3D(FVector(4.54f, 0.79f, 1.79f));
+
+    // ===== WeaponRange3 =====
+    WeaponRange3->SetRelativeLocation(FVector(69.597829f, 12.945897f, -18.492470f));
+    WeaponRange3->SetRelativeRotation(FRotator(0.f, -180.f, 0.f));
+    WeaponRange3->SetRelativeScale3D(FVector(2.54f, 3.54f, 1.79f));
+
+    WeaponRange1->SetupAttachment(GetMesh());
+    WeaponRange2->SetupAttachment(GetMesh());
+    WeaponRange3->SetupAttachment(GetMesh());
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
@@ -380,6 +405,42 @@ void APlayerCharacter::BeginPlay()
     CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
 
     InventoryItems = InventoryManager->ItemDataList;
+}
+
+void APlayerCharacter::SetWeaponRange(int32 Value)
+{
+    WeaponRange1->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    WeaponRange2->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    WeaponRange3->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    
+    switch (Value)
+    {
+    case 1:
+        WeaponRange1->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        break;
+    case 2:
+        WeaponRange3->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        break;
+    case 3:
+        WeaponRange2->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        break;
+    default:
+        break;
+    }
+}
+
+void APlayerCharacter::EndHitCheck()
+{
+    if (const ULOAttributeSet* MyAttrSet = Cast<ULOAttributeSet>(ASC->GetAttributeSet(ULOAttributeSet::StaticClass())))
+    {
+        float Damage = MyAttrSet->GetDamage();
+        for (AEnemyCh* Enemy : HitList)
+        {
+            Enemy->DecreaseHP(Damage);
+            UE_LOG(LogTemp,Log,TEXT("Damage : %f"),Damage);
+        }
+    }
+    HitList.Empty();
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

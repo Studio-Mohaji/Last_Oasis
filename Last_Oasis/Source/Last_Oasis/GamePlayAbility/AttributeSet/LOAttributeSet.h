@@ -33,6 +33,7 @@ class LAST_OASIS_API ULOAttributeSet : public UAttributeSet
 	ATTRIBUTE_ACCESSORS(ULOAttributeSet, MinTemperature);
 	ATTRIBUTE_ACCESSORS(ULOAttributeSet, Temperature);
 	ATTRIBUTE_ACCESSORS(ULOAttributeSet, Level);
+	ATTRIBUTE_ACCESSORS(ULOAttributeSet, Damage);
 	
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 protected:
@@ -56,6 +57,8 @@ protected:
 	FGameplayAttributeData Temperature;
 	UPROPERTY(BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Level;
+	UPROPERTY(BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Damage;
 
 	friend class UInGameHUD;
 	friend class APlayerCharacter;

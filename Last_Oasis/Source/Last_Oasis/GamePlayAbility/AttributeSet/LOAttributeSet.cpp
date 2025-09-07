@@ -14,7 +14,8 @@ ULOAttributeSet::ULOAttributeSet() :
 	MaxTemperature(100.f),
 	MinTemperature(0.f),
 	Temperature(36.5f),
-	Level(1)
+	Level(1),
+	Damage(20)
 {
 	
 }

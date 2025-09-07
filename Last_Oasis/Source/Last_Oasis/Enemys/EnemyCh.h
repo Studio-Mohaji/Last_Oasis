@@ -42,6 +42,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Damage;
+	
 	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
 	void DecreaseHP(float Value);
 protected:

@@ -98,33 +98,50 @@ private:
 
 private:
 	bool bIsInShadow;
+	
 	UPROPERTY()
 	TObjectPtr<class ADirectionalLight> Sun;
-
-
 public:
 
 	virtual void BeginPlay() override;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	//TSubclassOf<UUserWidget> CraftingWidgetClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UCraftingWidget* CraftingWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
-	ACraftingManager* CraftingManager;
-
+	
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	//TSubclassOf<UUserWidget> InventoryWidgetClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UInventoryWidget* InventoryWidget;
+	TObjectPtr<UCraftingWidget> CraftingWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	TObjectPtr<ACraftingManager> CraftingManager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UInventoryWidget> InventoryWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	AInventoryManager* InventoryManager;
+	TObjectPtr<AInventoryManager> InventoryManager;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TArray<FInventoryItem> InventoryItems;
 
 
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponRange(int32 Value);
+	UFUNCTION(BlueprintCallable)
+	void EndHitCheck();
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSet<TObjectPtr<class AEnemyCh>> HitList;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<class UBoxComponent> WeaponRange1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<class UBoxComponent> WeaponRange2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<class UBoxComponent> WeaponRange3;
 };

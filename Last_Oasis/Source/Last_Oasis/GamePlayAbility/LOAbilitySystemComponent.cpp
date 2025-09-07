@@ -123,7 +123,7 @@ void ULOAbilitySystemComponent::OnTemperatureChanged(const FOnAttributeChangeDat
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.SevereHot")))
 		{
-			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+			//RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.SevereHot"));
 		}
 	}
@@ -131,7 +131,7 @@ void ULOAbilitySystemComponent::OnTemperatureChanged(const FOnAttributeChangeDat
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateHot")))
 		{
-			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+			//RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateHot"));
 		}
 	}
@@ -155,7 +155,7 @@ void ULOAbilitySystemComponent::OnTemperatureChanged(const FOnAttributeChangeDat
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateCold")))
 		{
-			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+			//RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateCold"));
 		}
 	}
@@ -163,7 +163,7 @@ void ULOAbilitySystemComponent::OnTemperatureChanged(const FOnAttributeChangeDat
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildCold")))
 		{
-			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+			//RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildCold"));
 		}
 	}
