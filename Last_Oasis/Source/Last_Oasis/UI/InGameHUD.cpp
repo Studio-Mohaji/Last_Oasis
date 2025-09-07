@@ -51,28 +51,35 @@ void UInGameHUD::NativeConstruct()
 
 	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
 	CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
+
+	SetBuildings(Cast<APlayerCharacter>(GetOwningPlayer()->GetPawn()), 
+		FVector(5000, -5000, 0), FVector(5000, 5000, 0), FVector(-5000, 5000, 0));
 }
 
 void UInGameHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	
+	UE_LOG(LogTemp, Warning, TEXT("Tick null %d"), !Player);
+
 	if (!Player) return;
+
+	//UE_LOG(LogTemp, Warning, TEXT("Tick null %d"), !Player);
 
 	float PlayerYaw = Player->GetActorRotation().Yaw;
 
-	if (CurrentPhase == 1)
+	if (CurrentPhase >= 1)
 	{
-		float AngleA = GetAngleToTarget(Player->GetActorLocation(), LaboALoc, PlayerYaw);
+		float AngleA = GetAngleToTarget(LaboALoc);
 		ApplyMarkerRotation(LaboA, AngleA);
 
-		float AngleB = GetAngleToTarget(Player->GetActorLocation(), LaboBLoc, PlayerYaw);
+		float AngleB = GetAngleToTarget(LaboBLoc);
 		ApplyMarkerRotation(LaboB, AngleB);
 	}
 
 	if (CurrentPhase == 3)
 	{
-		float AngleC = GetAngleToTarget(Player->GetActorLocation(), OasisLoc, PlayerYaw);
+		float AngleC = GetAngleToTarget(OasisLoc);
 		ApplyMarkerRotation(Oasis, AngleC);
 	}
 }
@@ -129,7 +136,7 @@ void UInGameHUD::OnHungerChanged(const FOnAttributeChangeData& ChangeData)
 
 void UInGameHUD::OnTemperatureChanged(const FOnAttributeChangeData& ChangeData)
 {
-	UpdateProgress(TemperatureMID, ChangeData.NewValue/36.5 * 0.5);
+	UpdateProgress(TemperatureMID, (ChangeData.NewValue - 31.5) / 10);
 
 	FString NewText = FString::Printf(TEXT("%.1f"), ChangeData.NewValue);
 	TemperatureText->SetText(FText::FromString(NewText));
@@ -221,10 +228,20 @@ void UInGameHUD::UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent)
 
 void UInGameHUD::OpenGoal()
 {
+	if (bIsBorderMoving) return;
+
+	bIsBorderMoving = true;
+
 	ElapsedTime = 0.f;
 	TotalDuration = 1.0f;
 
 	StartPos = UWidgetLayoutLibrary::SlotAsCanvasSlot(Goal)->GetPosition();
+
+	if (StartPos.Y != 180 && StartPos.Y != -30)
+	{
+		bIsBorderMoving = false;
+		return;
+	}
 
 	EndPos = StartPos;
 	EndPos.Y = (StartPos.Y == 180) ? -30 : 180;
@@ -239,6 +256,7 @@ void UInGameHUD::UpdateBorderPosition()
 	if (!Goal)
 	{
 		GetWorld()->GetTimerManager().ClearTimer(BorderMoveTimerHandle);
+		bIsBorderMoving = false;
 		return;
 	}
 
@@ -255,6 +273,7 @@ void UInGameHUD::UpdateBorderPosition()
 	if (Alpha >= 1.f)
 	{
 		GetWorld()->GetTimerManager().ClearTimer(BorderMoveTimerHandle);
+		bIsBorderMoving = false;
 	}
 }
 
@@ -284,32 +303,45 @@ void UInGameHUD::SetBuildings(APlayerCharacter* Ch, FVector LaboAPos, FVector La
 	if (!Ch || !Ch->GetController()) return;
 
 	Player = Ch;
+	PlayerCamera = Player->FindComponentByClass<UCameraComponent>();
+	PlayerSpringArm = Player->FindComponentByClass<USpringArmComponent>();
+
 	LaboALoc = LaboAPos;
 	LaboBLoc = LaboBPos;
 	OasisLoc = OasisPos;
 }
 
-float UInGameHUD::GetAngleToTarget(const FVector& PlayerLoc, const FVector& TargetLoc, float PlayerYaw)
+float UInGameHUD::GetAngleToTarget(const FVector& TargetLoc)
 {
-	FVector Dir = (TargetLoc - PlayerLoc).GetSafeNormal2D();
-	FRotator Rot = Dir.Rotation();
+	FVector Forward = PlayerSpringArm->GetComponentLocation() - PlayerCamera->GetComponentLocation();
+	Forward.Z = 0;
+	Forward = Forward.GetSafeNormal2D();
 
-	float Yaw = Rot.Yaw;
+	FVector Dir = (TargetLoc - Player->GetActorLocation());
+	Dir.Z = 0;
+	Dir = Dir.GetSafeNormal2D();
 
-	if (Yaw < 0)
-		Yaw += 360.0f;
+	float Dot = FVector::DotProduct(Forward, Dir);
+	Dot = FMath::Clamp(Dot, -1.0f, 1.0f);
 
-	float Corrected = Yaw - PlayerYaw;
+	float Angle = FMath::Acos(Dot) * (180.0f / PI);
 
-	if (Corrected < 0)
-		Corrected += 360.0f;
+	float CrossZ = Forward.X * Dir.Y - Forward.Y * Dir.X;
+	if (CrossZ < 0)
+	{
+		Angle = 360.f - Angle;
+	}
 
-	return Corrected;
+	return Angle;
 }
 
 void UInGameHUD::ApplyMarkerRotation(UImage* Marker, float Angle)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Applying"));
+
 	if (!Marker) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("Applying Rotation: %f"), Angle);
 
 	FWidgetTransform Transform = Marker->GetRenderTransform();
 	Transform.Angle = Angle;

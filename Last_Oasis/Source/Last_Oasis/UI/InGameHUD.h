@@ -12,6 +12,8 @@
 #include "Widget/InventoryWidget.h"
 #include "Widget/CraftingWidget.h"
 #include "Character/PlayerCharacter.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 #include "InGameHUD.generated.h"
 
 UCLASS()
@@ -124,7 +126,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FString> GoalBarTexts;
 
-	APlayerCharacter* Player;	
+	APlayerCharacter* Player;
+	UCameraComponent* PlayerCamera;
+	USpringArmComponent* PlayerSpringArm;
 
 	FVector LaboALoc;
 	FVector LaboBLoc;
@@ -164,11 +168,14 @@ public:
 	FVector2D StartPos;
 	FVector2D EndPos;
 
+	UPROPERTY()
+	bool bIsBorderMoving = false;
+
 	void UpdateBorderPosition();
 
 	void SetBuildings(APlayerCharacter* Ch, FVector LaboAPos, FVector LaboBPos, FVector OasisPos);
 
-	float GetAngleToTarget(const FVector& PlayerLoc, const FVector& TargetLoc, float PlayerYaw);
+	float GetAngleToTarget(const FVector& TargetLoc);
 
 	void ApplyMarkerRotation(UImage* Marker, float Angle);
 };
