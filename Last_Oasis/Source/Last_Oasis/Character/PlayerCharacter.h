@@ -44,12 +44,13 @@ private:
 //Anim
 public:
 	FORCEINLINE virtual class UAnimMontage* GetAttackMontage() const { return AttackMonatage; }
-
+	FORCEINLINE virtual class UAnimMontage* GetDeadMontage() const { return DeadMontage; }
 
 protected:
 	UPROPERTY(EditAnywhere, Category = Anim)
 	TObjectPtr<UAnimMontage> AttackMonatage;
-
+	UPROPERTY(EditAnywhere, Category = Anim)
+	TObjectPtr<UAnimMontage> DeadMontage;
 //input
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)

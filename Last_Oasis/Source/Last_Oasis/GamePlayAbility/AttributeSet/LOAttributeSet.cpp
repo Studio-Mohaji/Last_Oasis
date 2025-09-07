@@ -76,6 +76,10 @@ void ULOAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 	if (Data.EvaluatedData.Attribute.AttributeName == GetHealthAttribute().AttributeName)
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0, GetMaxHealth()));
+		if (GetHealth()==0)
+		{
+			Data.Target.AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Dead"));
+		}
 	}
 
 	if (Data.EvaluatedData.Attribute.AttributeName == GetThirstAttribute().AttributeName)
