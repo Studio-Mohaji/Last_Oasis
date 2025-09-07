@@ -11,11 +11,19 @@ void UInventoryWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
+    if (!GetWorld() || !GetWorld()->IsGameWorld())
+        return;
+
     InventoryManager = Cast<AInventoryManager>(
         UGameplayStatics::GetActorOfClass(GetWorld(), AInventoryManager::StaticClass()));
 
-    InitializeSlots();
-    UpdateSlot();
+    if (InventoryManager)
+    {
+        InitializeSlots();
+        InventoryManager->OnInventoryUpdated.AddDynamic(this, &UInventoryWidget::UpdateSlot);
+        UpdateSlot();
+    }
+
 }
 
 void UInventoryWidget::InitializeSlots()
@@ -52,7 +60,7 @@ void UInventoryWidget::InitializeSlots()
         }
     }
 
-	InventoryManager->OnInventoryUpdated.AddDynamic(this, &UInventoryWidget::UpdateSlot);
+    //
 
 
     if (!ItemInfoWidget)

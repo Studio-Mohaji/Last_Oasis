@@ -7,6 +7,8 @@
 #include "../Data/RecipeState.h"
 #include "CraftingManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCraftingEvent, int32, SlotIndex);
+
 UCLASS()
 class LAST_OASIS_API ACraftingManager : public AActor
 {
@@ -26,5 +28,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	TArray<FRecipeState> RecipeStates;
+
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnCraftingEvent OnCraftingEvent;
+
+	UFUNCTION(BlueprintCallable, Category = "Crafting")
+	void StoryItemCraftingEvent(int32 index);
+
 
 };

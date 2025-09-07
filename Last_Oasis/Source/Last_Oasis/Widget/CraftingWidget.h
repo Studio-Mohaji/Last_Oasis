@@ -17,6 +17,8 @@
 class UCraftingItemList;
 class UCraftingRecipeList;
 
+
+
 /**
  * 
  */
@@ -61,6 +63,8 @@ public:
 	UPROPERTY()
 	TArray<UCraftingRecipeList*> RecipeListArray;
 
+	
+
 	UFUNCTION(BlueprintCallable, Category = "Crafting")
 	void CraftingRecipeInitialize();
 
@@ -75,4 +79,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Crafting")
 	void CraftingItem();
+	
+	void CloseCraftingUI(int32 index);
+
 };

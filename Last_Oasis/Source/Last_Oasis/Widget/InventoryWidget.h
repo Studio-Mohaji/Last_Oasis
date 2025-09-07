@@ -15,6 +15,7 @@ class UItemInfoWidget;
 class UInventorySlotWidget;
 class UDataAssetBase;
 class UItemListDataAsset;
+
 /**
  * 
  */
@@ -24,6 +25,7 @@ class LAST_OASIS_API UInventoryWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+    
     // 아이템 정보 위젯
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     UItemInfoWidget* ItemInfoWidget;
