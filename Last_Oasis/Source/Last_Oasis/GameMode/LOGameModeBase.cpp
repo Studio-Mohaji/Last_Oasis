@@ -8,6 +8,7 @@
 #include "EngineUtils.h"
 #include "Math/UnrealMathUtility.h"
 #include "Actor/BuildingPoint.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ALOGameModeBase::ALOGameModeBase()
 {
@@ -134,6 +135,9 @@ void ALOGameModeBase::BeginPlay()
     PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
         
 	SpawnBuilding();
+
+	FTimerHandle TempHandle;
+    //GetWorld()->GetTimerManager().SetTimer(TempHandle, this, &ALOGameModeBase::SpawnFarm, 0.5f, true);
 }
 
 void ALOGameModeBase::Tick(float DeltaSeconds)
@@ -243,6 +247,102 @@ void ALOGameModeBase::SpawnBuilding()
     else
     {
         UE_LOG(LogTemp, Warning, TEXT("NoHUD"));
+    }
+}
+
+void ALOGameModeBase::SpawnFarm()
+{
+    TArray<TSubclassOf<AActor>> SpawnPool;
+
+    SpawnPool.Append(TArray<TSubclassOf<AActor>>{ ActorClass1, ActorClass1, ActorClass1, ActorClass1 });
+    SpawnPool.Append(TArray<TSubclassOf<AActor>>{ ActorClass2, ActorClass2, ActorClass2, ActorClass2 });
+    SpawnPool.Append(TArray<TSubclassOf<AActor>>{ ActorClass3, ActorClass3 });
+    SpawnPool.Append(TArray<TSubclassOf<AActor>>{ ActorClass4 });
+    SpawnPool.Append(TArray<TSubclassOf<AActor>>{ ActorClass5 });
+
+
+    TArray<FVector> SpawnedLocations;
+    float MinDistance = 500.0f;
+    int32 MaxSpawn = 100;
+    int32 MaxTries = 50;
+
+    for (int32 i = 0; i < MaxSpawn; i++)
+    {
+        FVector RandomLoc;
+        bool bFoundValidLocation = false;
+
+        for (int32 Try = 0; Try < MaxTries; Try++)
+        {
+            RandomLoc = UKismetMathLibrary::RandomPointInBoundingBox(BoxCenter, BoxExtent);
+
+            RandomLoc.Z += 12000;
+
+            bool bTooClose = false;
+            for (const FVector& Loc : SpawnedLocations)
+            {
+                if (FVector::DistXY(Loc, RandomLoc) < MinDistance)
+                {
+                    bTooClose = true;
+                    break;
+                }
+            }
+
+            if (bTooClose)
+                continue;
+
+            FHitResult Hit;
+            FCollisionQueryParams Params;
+            Params.bTraceComplex = true;
+
+            bool bHit = GetWorld()->LineTraceSingleByChannel(
+                Hit,
+                RandomLoc,
+                FVector(RandomLoc.X, RandomLoc.Y, RandomLoc.Z - 5000.0f),
+                ECC_WorldStatic,
+                Params
+            );
+
+            FColor LineColor = bHit ? FColor::Green : FColor::Red;
+            DrawDebugLine(
+                GetWorld(),
+                RandomLoc,
+                bHit ? Hit.Location : FVector(RandomLoc.X, RandomLoc.Y, RandomLoc.Z - 5000.0f),
+                LineColor,
+                false,       // 지속 시간
+                5.0f,        // 라인 지속 시간 5초
+                0,           // 깊이 우선 순위
+                5.0f         // 두께
+            );
+
+            if (bHit)
+            {
+                RandomLoc.Z = Hit.Location.Z;
+                bFoundValidLocation = true;
+                break;
+            }
+        }		
+
+        if (bFoundValidLocation)
+        {
+            int32 RandIndex = FMath::RandRange(0, SpawnPool.Num() - 1);
+            TSubclassOf<AActor> SelectedClass = SpawnPool[RandIndex];
+
+            if (SelectedClass)
+            {
+                FActorSpawnParameters SpawnParams;
+                SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+                AActor* Spawned = GetWorld()->SpawnActor<AActor>(SelectedClass, RandomLoc, FRotator::ZeroRotator, SpawnParams);
+                if (Spawned)
+                {
+                    SpawnedLocations.Add(RandomLoc);
+                }
+            }
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Failed to find valid location for spawn %d"), i);
+        }
     }
 }
 
