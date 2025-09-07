@@ -19,6 +19,7 @@
 #include "../Actor/InventoryManager.h"
 #include "Components/BoxComponent.h"
 #include "Enemys/EnemyCh.h"
+#include "GameMode/LOGameModeBase.h"
 #include "UI/InGameHUD.h"
 
 // Sets default values
@@ -309,6 +310,11 @@ void APlayerCharacter::InputPressed(int32 InputID)
         {
             ASC->TryActivateAbility(Spec->Handle);
         }
+    }
+
+    if (InputID == 1 && ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.NearTent")))
+    {
+        Cast<ALOGameModeBase>(GetWorld()->GetAuthGameMode())->SetSpawnPoint(TentTransform);
     }
 }
 

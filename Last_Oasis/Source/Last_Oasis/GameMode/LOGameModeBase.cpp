@@ -24,10 +24,11 @@ void ALOGameModeBase::Respawn()
     }
 }
 
-void ALOGameModeBase::SetSpawnPoint(FTransform SpawnTransform)
+    void ALOGameModeBase::SetSpawnPoint(FTransform SpawnTransform)
 {
     SpawnPoint = SpawnTransform;
-    SpawnPoint += FTransform(FVector(200,0,0));
+    SpawnPoint += FTransform(FVector(0,-500,0));
+    SpawnPoint.SetScale3D(FVector(1,1,1));
 }
 
 void ALOGameModeBase::BeginPlay()
@@ -164,6 +165,8 @@ void ALOGameModeBase::SpawnBuilding()
     GetWorld()->SpawnActor<AActor>(BuildingC, LocationC, FRotator::ZeroRotator);
     SpawnPoint = a->GetActorTransform();
     SpawnPoint += FTransform(FVector(0,-1000,0));
+    SpawnPoint.SetScale3D(FVector(1,1,1));
+
     APlayerController* Controller = GetWorld()->GetFirstPlayerController();
     if (Controller)
     {

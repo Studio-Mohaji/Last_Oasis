@@ -26,6 +26,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
 	void StartReduceStat();
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FTransform TentTransform;
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void PossessedBy(AController* NewController) override;
@@ -103,7 +107,6 @@ private:
 
 private:
 	bool bIsInShadow;
-	
 	UPROPERTY()
 	TObjectPtr<class ADirectionalLight> Sun;
 
@@ -140,7 +143,10 @@ public:
 	void SetWeaponRange(int32 Value);
 	UFUNCTION(BlueprintCallable)
 	void EndHitCheck();
-
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
+	void ShowEffect();
+	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
+	void GetWeapon();
 	void InitWidgetsFromHUD();
 
 private:
