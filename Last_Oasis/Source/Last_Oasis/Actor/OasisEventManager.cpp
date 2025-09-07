@@ -24,7 +24,10 @@ void AOasisEventManager::BeginPlay()
 	AGameModeBase* GameMode = UGameplayStatics::GetGameMode(GetWorld());
 	ALOGameModeBase* LOGameMode = Cast<ALOGameModeBase>(GameMode);
 
-	LOGameMode->BuildingB->getLocation
+	for (int i = 0; i < LOGameMode->SpawnedBuildings.Num(); i++)
+	{
+		StoryLightPositions[i] = LOGameMode->SpawnedBuildings[i]->GetActorLocation();
+	}
 
 	CraftingManager= Cast<ACraftingManager>(
 		UGameplayStatics::GetActorOfClass(GetWorld(), ACraftingManager::StaticClass()));
