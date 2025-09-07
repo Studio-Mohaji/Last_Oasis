@@ -10,6 +10,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCraftingEvent, int32, SlotIndex);
 
 class UDataAssetBase;
+class APlayerController;
 
 UCLASS()
 class LAST_OASIS_API ACraftingManager : public AActor
@@ -42,4 +43,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Crafting")
 	void WeaponCrafting();
+
+	APlayerController* PC;
 };
