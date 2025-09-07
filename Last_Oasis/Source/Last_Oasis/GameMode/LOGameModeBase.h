@@ -31,7 +31,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="DayNight")
 	float CurrentHour = 6.0f;
 
-	bool SandStorm
+	bool SandStorm;
 	// UFUNCTION(BlueprintCallable, Category="DayNight")
 	// bool IsDaytime() const;
 	//

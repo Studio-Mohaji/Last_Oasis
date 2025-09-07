@@ -171,12 +171,23 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
             {
                 if (FMath::FRand() < 0.02f)
                 {
-                    
+                    APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+                    if (Controller)
+                    {
+                        Cast<IAbilitySystemInterface>(Controller)->GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.SandStorm"));
+                    }
                 }
             }
             else
             {
-                
+                if (FMath::FRand() < 0.4f)
+                {
+                    APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+                    if (Controller)
+                    {
+                        Cast<IAbilitySystemInterface>(Controller)->GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.SandStorm"));
+                    }
+                }
             }
         }
         if(PC->HUD)
