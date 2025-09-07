@@ -5,6 +5,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Components/ProgressBar.h"
 #include "GameMode/LOGameModeBase.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Components/CanvasPanelSlot.h"
 
 void UInGameHUD::NativeConstruct()
 {
@@ -12,6 +15,20 @@ void UInGameHUD::NativeConstruct()
 
 	SunTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_Sun.MagicalGirl_Sun"));
 	MoonTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_DarkSun.MagicalGirl_DarkSun"));
+
+	GoalTexts = { 
+		TEXT("청사진을 활용하여 라디오 수신기를 제작하세요. 수신기는 다른 연구소의 위치를 파악할 수 있는 중요 장비입니다."),
+		TEXT("라디오 수신기를 사용하여 또 다른 연구소의 위치를 파악하고, 그곳으로 향하세요. 새로운 정보를 얻을 수 있을지도 모릅니다."),
+		TEXT("청사진을 활용하여 지하 신호 해독기를 제작하세요. 해독기로 지하 대피 시설의 정확한 위치를 알 수 있습니다."),
+		TEXT("얼마 남지 않았습니다. 지하 대피 시설로 향하세요.")
+	};
+
+	GoalBarTexts = {
+		TEXT("라디오 수신기 제작하기"),
+		TEXT("다른 연구소로 향하기"),
+		TEXT("지하 신호 해독기 제작하기"),
+		TEXT("지하 대피 시설로 향하기")
+	};
 
 	InitProgress(Thirst, ThirstMID);
 	InitProgress(Hunger, HungerMID);
@@ -23,6 +40,8 @@ void UInGameHUD::NativeConstruct()
 	UpdateProgress(ThirstMID, 0.9f);
 	UpdateProgress(HungerMID, 0.9f);
 	UpdateProgress(TemperatureMID, 0.5f);
+
+	SetGoalText(0);
 }
 
 void UInGameHUD::SetAbilitySystemComponent()
@@ -146,4 +165,47 @@ void UInGameHUD::UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent)
 	{
 		MID->SetScalarParameterValue(FName("Percent"), Percent);
 	}
+}
+
+void UInGameHUD::OpenGoal(bool bIsOpen)
+{
+	ElapsedTime = 0.f;
+	TotalDuration = 3.0f;
+
+	StartPos = UWidgetLayoutLibrary::SlotAsCanvasSlot(Goal)->GetPosition();
+
+	EndPos = StartPos;
+	EndPos.Y = bIsOpen ? -30 : 270;
+
+	GetWorld()->GetTimerManager().SetTimer(BorderMoveTimerHandle, this, &UInGameHUD::UpdateBorderPosition, 0.01f, true);
+}
+
+void UInGameHUD::UpdateBorderPosition()
+{
+	if (!TargetBorder)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(BorderMoveTimerHandle);
+		return;
+	}
+
+	ElapsedTime += 0.01f;
+	float Alpha = FMath::Clamp(ElapsedTime / TotalDuration, 0.f, 1.f);
+
+	FVector2D NewPos = FMath::Lerp(StartPos, EndPos, Alpha);
+
+	if (UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(Goal))
+	{
+		CanvasSlot->SetPosition(NewPos);
+	}
+
+	if (Alpha >= 1.f)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(BorderMoveTimerHandle);
+	}
+}
+
+void UInGameHUD::SetGoalText(int32 Phase)
+{
+	GoalBarText->SetText(FText::FromString(GoalBarTexts[Phase]));
+	GoalText->SetText(FText::FromString(GoalTexts[Phase]));
 }
