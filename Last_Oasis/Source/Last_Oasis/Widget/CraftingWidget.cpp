@@ -118,8 +118,6 @@ void UCraftingWidget::UpdateSelection(UCraftingRecipeList* SelectedRecipe)
 
     // 선택된 Recipe의 ItemList 업데이트
     CraftingItemUpdate();
-
-    CraftingItemName->SetText(FText::FromName(SelectedRecipe->ItemData->ItemName));
 }
 
 // 켜고 끌때마다 업데이트

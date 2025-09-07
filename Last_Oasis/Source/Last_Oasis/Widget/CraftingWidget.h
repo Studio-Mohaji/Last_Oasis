@@ -40,9 +40,6 @@ public:
 	class UVerticalBox* CraftingItemList;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* CraftingItemName;
-
-	UPROPERTY(meta = (BindWidget))
 	class UCanvasPanel* CraftingUIBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")

@@ -27,7 +27,11 @@ FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, cons
 
 		InfoWidget = ParentInventoryWidget->ItemInfoWidget;
 	}
-	InfoWidget->SetVisibility(ESlateVisibility::Visible);
+	
+	if (InfoWidget->GetVisibility() != ESlateVisibility::Visible)
+		InfoWidget->SetVisibility(ESlateVisibility::Visible);
+
+
 
 	FVector2D MousePos = InMouseEvent.GetScreenSpacePosition();
 	MousePos.Y -= 170.0f; 
