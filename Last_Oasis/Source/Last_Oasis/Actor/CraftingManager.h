@@ -44,5 +44,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Crafting")
 	void WeaponCrafting();
 
+
+	UPROPERTY(EditDefaultsOnly, Category = "Usable")
+	TArray<UDataAssetBase*> FirstStoryItemData;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Usable")
+	TArray<UDataAssetBase*> SecondStoryItemData;
+
+
+
+
 	APlayerController* PC;
 };
