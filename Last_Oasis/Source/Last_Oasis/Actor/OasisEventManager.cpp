@@ -20,6 +20,9 @@ void AOasisEventManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
+
+	CraftingManager= Cast<ACraftingManager>(
+		UGameplayStatics::GetActorOfClass(GetWorld(), ACraftingManager::StaticClass()));
 	if (CraftingManager)
 	{
 		CraftingManager->OnCraftingEvent.AddDynamic(this, &AOasisEventManager::LightEvent);
@@ -76,6 +79,7 @@ void AOasisEventManager::Tick(float DeltaTime)
 
 void AOasisEventManager::LightEvent(int32 index)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Light Event Index : %d"), index);
 	FocusPC = GetWorld()->GetFirstPlayerController();
 	if (!FocusPC) return;
 

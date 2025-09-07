@@ -5,6 +5,7 @@
 #include "../Actor/CraftingManager.h"
 
 #include "Actor/InteractiveActor.h"
+#include "Character/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -22,6 +23,8 @@ void AInventoryManager::BeginPlay()
 
     CraftingManager = Cast<ACraftingManager>(
         UGameplayStatics::GetActorOfClass(GetWorld(), ACraftingManager::StaticClass()));
+
+    UE_LOG(LogTemp, Warning, TEXT("BeginPlay RecipeItems.Num = %d"), RecipeItems.Num());
 }
 
 // Called every frame
@@ -47,6 +50,19 @@ void AInventoryManager::UseItem(UDataAssetBase* ItemData)
                 UE_LOG(LogTemp, Warning, TEXT("Use Item"));
 
                 // TODO: 아이템 사용 효과
+                APlayerCharacter* PC = Cast<APlayerCharacter>(
+                    UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+                if (PC && ItemData->UseValue != 0.f)
+                {
+                    //if (ItemData == UsableItemDatas[2]) // 음식
+                    //    PC->InputPressed(2);
+                    //else if (ItemData == UsableItemDatas[3]) // 물
+                    //    PC->InputPressed(3);
+                    //else if (ItemData == UsableItemDatas[4]) // 붕대
+                    //    PC->InputPressed(4);
+                }
+
 
                 item.CurrentCount--;
 
@@ -64,19 +80,24 @@ void AInventoryManager::UseItem(UDataAssetBase* ItemData)
 
 void AInventoryManager::GetItem(AInteractiveActor* InteractiveActor)
 {
+    UE_LOG(LogTemp, Error, TEXT("----------------------------------------------------------------------"));
     if (!InteractiveActor) return;
-
+    UE_LOG(LogTemp, Error, TEXT("======================================================================="));
     for (const FDropItemData& DropData : InteractiveActor->DropItems)
     {
         if (!DropData.DropItemData) continue;
 
         int32 RandomRoll = FMath::RandRange(1, 100);
         if (RandomRoll > DropData.DropChance) // 획득 실패
+        {
+			UE_LOG(LogTemp, Warning, TEXT("Item drop chance failed)"));
             continue; 
+        }
 
         // 드랍 개수
         int32 DropCount = FMath::RandRange(DropData.DropMinRange, DropData.DropMaxRange);
 
+        UE_LOG(LogTemp, Warning, TEXT("drop Count %d)"), DropCount);
         // 아이템 획득
         for (int32 i = 0; i < DropCount; i++)
         {
@@ -228,7 +249,7 @@ void AInventoryManager::CheckRecipe(UDataAssetBase* ItemData)
             UpdateRecipeBroadCast();
 
             // 사용한 레시피 제거
-            RecipeItems.RemoveAt(i);
+            //RecipeItems.RemoveAt(i);
         }
     }
 

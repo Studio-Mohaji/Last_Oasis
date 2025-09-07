@@ -69,7 +69,7 @@ void UInventoryWidget::InitializeSlots()
 
         if (ItemInfoWidget)
         {
-            ItemInfoWidget->AddToViewport();
+            ItemInfoWidget->AddToViewport(100);
             ItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
         }       
     }

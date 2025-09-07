@@ -27,6 +27,7 @@ void ACraftingManager::Tick(float DeltaTime)
 
 void ACraftingManager::StoryItemCraftingEvent(int32 index)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Crafting Event Index : %d"), index);
 	OnCraftingEvent.Broadcast(index);
 }
 

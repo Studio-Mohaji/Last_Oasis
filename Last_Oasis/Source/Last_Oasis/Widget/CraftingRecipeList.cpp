@@ -15,6 +15,8 @@ void UCraftingRecipeList::NativeConstruct()
 
 void UCraftingRecipeList::OnClicked()
 {
+
+	UE_LOG(LogTemp, Warning, TEXT("RecipeList Name: %s"), *ItemData->ItemName.ToString());
     // Åä±Û
     bIsSelected = !bIsSelected;
 
@@ -22,6 +24,7 @@ void UCraftingRecipeList::OnClicked()
 
     if (ParentCraftingWidget)
     {
+        UE_LOG(LogTemp, Warning, TEXT("SelectionUpdate"));
         ParentCraftingWidget->UpdateSelection(this);
     }
 }

@@ -35,6 +35,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UBorder* BackgroundBorder;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	bool bIsSelected = false;
 
 	virtual void NativeConstruct() override;
