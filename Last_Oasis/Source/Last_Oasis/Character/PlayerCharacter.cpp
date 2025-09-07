@@ -218,6 +218,17 @@ void APlayerCharacter::FellOutOfWorld(const class UDamageType& dmgType)
     Super::FellOutOfWorld(dmgType);
 }
 
+void APlayerCharacter::SpawnPlayer()
+{
+    SetActorLocation(SpawnPoint);
+    GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+}
+
+void APlayerCharacter::SetSpawnPoint()
+{
+    SpawnPoint = GetActorLocation();
+}
+
 void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
