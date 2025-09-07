@@ -13,7 +13,8 @@ class LAST_OASIS_API ALOGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 public:
 	ALOGameModeBase();
-	
+	UPROPERTY()
+	TArray<AActor*> SpawnedBuildings;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DayNight")
 	float DayLength = 1200.0f;
 
@@ -40,7 +41,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetSpawnPoint(FTransform SpawnTransform);
-		
+	void SetTimeOfDay(int32 NewHour, int32 NewMinute);
+	bool GetRemainTimeUntilMorning();
+	void AddMinute(int32 AddMinute);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform SpawnPoint;
 	
