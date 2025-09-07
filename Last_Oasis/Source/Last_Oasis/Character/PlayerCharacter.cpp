@@ -14,7 +14,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GamePlayAbility/LOAbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Player/LOPlayerController.h"
 #include "Player/LOPlayerState.h"
 #include "../Data/InventoryItemStruct.h"
 #include "../Actor/InventoryManager.h"
@@ -223,6 +222,8 @@ void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
     Sun = Cast<ADirectionalLight>(UGameplayStatics::GetActorOfClass(GetWorld(), ADirectionalLight::StaticClass()));
+    LOPC = Cast<ALOPlayerController>(NewController);
+
 
     if (ALOPlayerState* PS = GetPlayerState<ALOPlayerState>())
     {
@@ -245,11 +246,6 @@ void APlayerCharacter::PossessedBy(AController* NewController)
         StartSpec.InputID = StartInputAbilitie.Key;
         ASC->GiveAbility(StartSpec);
     }
-    ALOPlayerController* PlayerController = CastChecked<ALOPlayerController>(NewController);
-    PlayerController->ConsoleCommand(TEXT("Showdebug Abilitysystem"));
-    PlayerController->InitHUD();
-    CraftingWidget = PlayerController->HUD->GetCraftingWidget();
-    InventoryWidget = PlayerController->HUD->GetInventoryWidget();
 }
 
 void APlayerCharacter::NotifyControllerChanged()
@@ -365,6 +361,9 @@ void APlayerCharacter::ToggleInventoryFunction(const FInputActionValue& Value)
     if (InventoryWidget->IsVisible())
     {
         InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+
+        PC->SetInputMode(FInputModeGameOnly());
+        PC->bShowMouseCursor = false;
     }
     else
     {
@@ -395,16 +394,36 @@ void APlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    CraftingManager = Cast<ACraftingManager>(
-        UGameplayStatics::GetActorOfClass(GetWorld(), ACraftingManager::StaticClass()));
+    LOPC = Cast<ALOPlayerController>(GetController());
+
+    if (LOPC)
+    {
+        if (LOPC->HUD)
+        {
+            InitWidgetsFromHUD();
+        }
+        else
+        {
+            LOPC->OnHUDInitialized.AddDynamic(this, &APlayerCharacter::InitWidgetsFromHUD);
+        }
+    }
+}
+
+void APlayerCharacter::InitWidgetsFromHUD()
+{
+    if (!LOPC || !LOPC->HUD) return;
+
+    InventoryWidget = LOPC->HUD->GetInventoryWidget();
+    CraftingWidget = LOPC->HUD->GetCraftingWidget();
 
     InventoryManager = Cast<AInventoryManager>(
         UGameplayStatics::GetActorOfClass(GetWorld(), AInventoryManager::StaticClass()));
 
-    InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
-    CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
+    CraftingManager = Cast<ACraftingManager>(
+        UGameplayStatics::GetActorOfClass(GetWorld(), ACraftingManager::StaticClass()));
 
-    InventoryItems = InventoryManager->ItemDataList;
+    if (InventoryManager)
+        InventoryItems = InventoryManager->ItemDataList;
 }
 
 void APlayerCharacter::SetWeaponRange(int32 Value)
@@ -443,6 +462,11 @@ void APlayerCharacter::EndHitCheck()
     HitList.Empty();
 }
 
+void APlayerCharacter::ToggleMissionFunction()
+{
+    LOPC->HUD->OpenGoal();
+}
+
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -458,6 +482,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     EnhancedInputComponent->BindAction(Interaction, ETriggerEvent::Started, this, &APlayerCharacter::InteractionFuction);
     EnhancedInputComponent->BindAction(ToggleCraft, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleCraftFunction);
     EnhancedInputComponent->BindAction(ToggleInventory, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleInventoryFunction);
+    EnhancedInputComponent->BindAction(ToggleMission, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleMissionFunction);
+
 }
 
 

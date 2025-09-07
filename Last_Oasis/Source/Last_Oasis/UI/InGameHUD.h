@@ -104,16 +104,16 @@ protected:
 	TObjectPtr<class UImage> GoalArrow;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UBorder> Inventory;
-
-	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UBorder> Crafting;	
-
-	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UInventoryWidget> InventoryWidget;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UCraftingWidget> CraftingWidget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<class UCraftingWidget> CraftingWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<class UInventoryWidget> InventoryWidgetClass;
 
 	UTexture2D* SunTexture;
 	UTexture2D* MoonTexture;
@@ -153,7 +153,7 @@ public:
     void UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent);
 
 	UFUNCTION()
-	void OpenGoal(bool bIsOpen);
+	void OpenGoal();
 
 	UFUNCTION()
 	void SetGoalText(int32 Phase);
@@ -163,7 +163,6 @@ public:
 	float TotalDuration;
 	FVector2D StartPos;
 	FVector2D EndPos;
-	TObjectPtr<UBorder> TargetBorder;
 
 	void UpdateBorderPosition();
 

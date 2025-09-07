@@ -19,6 +19,8 @@ void ALOGameModeBase::BeginPlay()
 	//GetWorld()->GetTimerManager().SetTimer(TimeHandle, this, &ALOGameModeBase::UpdateGameTime, 1.0f, true);
 
     PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+
+	SpawnBuilding();
 }
 
 void ALOGameModeBase::Tick(float DeltaSeconds)
