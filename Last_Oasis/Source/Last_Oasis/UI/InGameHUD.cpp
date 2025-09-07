@@ -13,8 +13,16 @@ void UInGameHUD::NativeConstruct()
 	SunTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_Sun.MagicalGirl_Sun"));
 	MoonTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_DarkSun.MagicalGirl_DarkSun"));
 
+	InitProgress(Thirst, ThirstMID);
+	InitProgress(Hunger, HungerMID);
+	InitProgress(Temperature, TemperatureMID);
+
 	UpdateTime(6, 0);
 	UpdateDays(1);
+
+	UpdateProgress(ThirstMID, 0.9f);
+	UpdateProgress(HungerMID, 0.9f);
+	UpdateProgress(TemperatureMID, 0.5f);
 }
 
 void UInGameHUD::SetAbilitySystemComponent()
@@ -37,19 +45,28 @@ void UInGameHUD::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
 	Health->SetPercent(ChangeData.NewValue/100);
 }
 
-void UInGameHUD::OnHungerChanged(const FOnAttributeChangeData& ChangeData)
-{
-	Hunger->SetPercent(ChangeData.NewValue/100);
-}
-
 void UInGameHUD::OnThirstChanged(const FOnAttributeChangeData& ChangeData)
 {
-	Thirst->SetPercent(ChangeData.NewValue/100);
+	UpdateProgress(ThirstMID, ChangeData.NewValue / 100);
+
+	FString NewText = FString::Printf(TEXT("%.1f"), ChangeData.NewValue);
+	ThirstText->SetText(FText::FromString(NewText));
+}
+
+void UInGameHUD::OnHungerChanged(const FOnAttributeChangeData& ChangeData)
+{
+	UpdateProgress(HungerMID, ChangeData.NewValue/100);
+
+	FString NewText = FString::Printf(TEXT("%.1f"), ChangeData.NewValue);
+	HungerText->SetText(FText::FromString(NewText));
 }
 
 void UInGameHUD::OnTemperatureChanged(const FOnAttributeChangeData& ChangeData)
 {
-	Temperature->SetPercent(ChangeData.NewValue/100);
+	UpdateProgress(TemperatureMID, ChangeData.NewValue/36.5 * 0.5);
+
+	FString NewText = FString::Printf(TEXT("%.1f"), ChangeData.NewValue);
+	TemperatureText->SetText(FText::FromString(NewText));
 }
 
 void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
@@ -62,15 +79,31 @@ void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
 
 		if(Day_Night)
 		{
-			int TotalMinutes = Hour * 60 + Minute;
+			if(Day_Night && ASC)
+			{
+				int TotalMinutes = Hour * 60 + Minute;
 
-			if (TotalMinutes >= 6 * 60 && TotalMinutes < 20 * 60 + 24)
-			{
-				Day_Night->SetBrushFromTexture(SunTexture);
-			}
-			else
-			{
-				Day_Night->SetBrushFromTexture(MoonTexture);
+			
+				if (TotalMinutes >= 6 * 60 && TotalMinutes < 20 * 60 + 24)
+				{
+					Day_Night->SetBrushFromTexture(SunTexture);
+					if (ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("Game.Night")))
+					{
+						ASC->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Night"));
+						ASC->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Day"));
+						Day_Night->SetBrushFromTexture(SunTexture);
+					}
+				}
+				else
+				{
+					Day_Night->SetBrushFromTexture(MoonTexture);
+					if (ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("Game.Day")))
+					{
+						ASC->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Day"));
+						ASC->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Night"));
+						Day_Night->SetBrushFromTexture(MoonTexture);
+					}
+				}
 			}
 		}
 	}
@@ -83,5 +116,34 @@ void UInGameHUD::UpdateDays(int32 Days)
 		FString NewText = FString::Printf(TEXT("%d Days"), Days);
 
 		DaysText->SetText(FText::FromString(NewText));
+		if (Days == 6 || Days == 12)
+		{
+			ASC->ApplyModToAttribute(ULOAttributeSet::GetLevelAttribute(),EGameplayModOp::Additive,1);
+			FGameplayTagContainer Tag;
+			Tag.AddTag(FGameplayTag::RequestGameplayTag("State.Reduction"));
+			ASC->CancelAbilities(&Tag);
+			ASC->TryActivateAbilitiesByTag(Tag);
+		}
+	}
+}
+
+void UInGameHUD::InitProgress(UImage*& State, UMaterialInstanceDynamic*& MID)
+{	
+	if (State && State->GetBrush().GetResourceObject())
+	{
+		MID = UMaterialInstanceDynamic::Create(
+			Cast<UMaterialInterface>(State->GetBrush().GetResourceObject()),
+			this
+		);
+
+		State->SetBrushFromMaterial(MID);
+	}
+}
+
+void UInGameHUD::UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent)
+{
+	if (MID)
+	{
+		MID->SetScalarParameterValue(FName("Percent"), Percent);
 	}
 }

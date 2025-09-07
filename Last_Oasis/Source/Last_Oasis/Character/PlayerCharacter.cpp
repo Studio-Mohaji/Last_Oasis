@@ -269,9 +269,9 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
     }
 }
 
-void APlayerCharacter::InputPressed(int32 Value)
+void APlayerCharacter::InputPressed(int32 InputID)
 {
-    FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(Value);
+    FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
 
     if (Spec)
     {
@@ -283,6 +283,20 @@ void APlayerCharacter::InputPressed(int32 Value)
         else
         {
             ASC->TryActivateAbility(Spec->Handle);
+        }
+    }
+}
+
+void APlayerCharacter::InputReleased(int32 InputID)
+{
+    FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputID);
+
+    if (Spec)
+    {
+        Spec->InputPressed = false;
+        if (Spec->IsActive())
+        {
+            ASC->AbilitySpecInputReleased(*Spec);
         }
     }
 }
@@ -373,12 +387,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
     UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
-    EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-    EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+    EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APlayerCharacter::InputPressed, 0);
+    EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APlayerCharacter::InputReleased, 0);
     
     EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
     EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
-    EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::InputPressed, 0);
+    EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::InputPressed, 1);
 
     EnhancedInputComponent->BindAction(Interaction, ETriggerEvent::Started, this, &APlayerCharacter::InteractionFuction);
     EnhancedInputComponent->BindAction(ToggleCraft, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleCraftFunction);

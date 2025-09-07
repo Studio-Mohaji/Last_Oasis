@@ -90,7 +90,8 @@ protected:
 private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void InputPressed(int32 Value);
+	void InputPressed(int32 InputID);
+	void InputReleased(int32 InputID);
 	void ToggleCraftFunction(const FInputActionValue& Value);
 	void ToggleInventoryFunction(const FInputActionValue& Value);
 	void InteractionFuction(const FInputActionValue& Value);

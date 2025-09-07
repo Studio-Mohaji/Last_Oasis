@@ -26,8 +26,8 @@ protected:
 	virtual void NativeConstruct() override;
 
 	void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
-	void OnHungerChanged(const FOnAttributeChangeData& ChangeData);
 	void OnThirstChanged(const FOnAttributeChangeData& ChangeData);
+	void OnHungerChanged(const FOnAttributeChangeData& ChangeData);	
 	void OnTemperatureChanged(const FOnAttributeChangeData& ChangeData);
 	
 protected:
@@ -36,13 +36,34 @@ protected:
 
 	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UProgressBar> Health;
-	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UProgressBar> Hunger;
-	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UProgressBar> Thirst;
-	UPROPERTY(EditAnywhere,Meta=(AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UProgressBar> Temperature;
-	
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	UImage* Thirst;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	UImage* Hunger;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	UImage* Temperature;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UTextBlock> ThirstText;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UTextBlock> HungerText;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UTextBlock> TemperatureText;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* ThirstMID;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* HungerMID;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* TemperatureMID;
+
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UTextBlock> DaysText;
@@ -63,16 +84,13 @@ protected:
 	TObjectPtr<class UTextBlock> GoalText;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> GoalImg;
-
-	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UTextBlock> GoalBarText;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> Inventory;
+	TObjectPtr<class UBorder> Inventory;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
-	TObjectPtr<class UImage> Crafting;
+	TObjectPtr<class UBorder> Crafting;
 
 	UTexture2D* SunTexture;
 	UTexture2D* MoonTexture;
@@ -96,4 +114,10 @@ public:
 
 	UFUNCTION()
 	void UpdateDays(int32 Days);
+
+	UFUNCTION()
+	void InitProgress(UImage*& State, UMaterialInstanceDynamic*& MID);
+
+	UFUNCTION()
+    void UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent);
 };
