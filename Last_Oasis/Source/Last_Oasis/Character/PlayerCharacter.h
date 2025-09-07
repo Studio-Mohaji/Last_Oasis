@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "Player/LOPlayerController.h"
 
 #include "../Widget/CraftingWidget.h"
 #include "../Widget/InventoryWidget.h"
@@ -95,12 +96,16 @@ private:
 	void ToggleCraftFunction(const FInputActionValue& Value);
 	void ToggleInventoryFunction(const FInputActionValue& Value);
 	void InteractionFuction(const FInputActionValue& Value);
+	void ToggleMissionFunction();
 
 private:
 	bool bIsInShadow;
 	
 	UPROPERTY()
 	TObjectPtr<class ADirectionalLight> Sun;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (AllowPrivateAccess = "true"))
+	ALOPlayerController* LOPC;
 public:
 
 	virtual void BeginPlay() override;
@@ -132,6 +137,9 @@ public:
 	void SetWeaponRange(int32 Value);
 	UFUNCTION(BlueprintCallable)
 	void EndHitCheck();
+
+	void InitWidgetsFromHUD();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TSet<TObjectPtr<class AEnemyCh>> HitList;

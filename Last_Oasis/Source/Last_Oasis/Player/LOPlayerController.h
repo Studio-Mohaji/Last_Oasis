@@ -6,9 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "LOPlayerController.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHUDInitialized);
+
 UCLASS()
 class LAST_OASIS_API ALOPlayerController : public APlayerController
 {
@@ -23,4 +22,7 @@ public:
 	TSubclassOf<class UInGameHUD> HUDWidgetClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UInGameHUD> HUD;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHUDInitialized OnHUDInitialized;
 };

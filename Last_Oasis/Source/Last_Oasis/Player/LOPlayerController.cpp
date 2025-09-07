@@ -13,6 +13,8 @@ void ALOPlayerController::InitHUD()
 		{
 			HUD->AddToViewport();
 			HUD->SetAbilitySystemComponent();
+
+			OnHUDInitialized.Broadcast();
 		}
 	}
 }
@@ -21,5 +23,5 @@ void ALOPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
+	InitHUD();
 }

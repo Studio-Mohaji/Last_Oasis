@@ -55,7 +55,7 @@ void UInventoryWidget::InitializeSlots()
 	InventoryManager->OnInventoryUpdated.AddDynamic(this, &UInventoryWidget::UpdateSlot);
 
 
-    if (!ItemInfoWidget)
+    if (!IsValid(ItemInfoWidget))
     {
         ItemInfoWidget = CreateWidget<UItemInfoWidget>(GetWorld(), ItemInfoWidgetClass);
         ItemInfoWidget->AddToViewport();

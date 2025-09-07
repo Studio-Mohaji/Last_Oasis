@@ -48,6 +48,9 @@ void UInGameHUD::NativeConstruct()
 	LaboA->SetVisibility(ESlateVisibility::Hidden);
 	LaboB->SetVisibility(ESlateVisibility::Hidden);
 	Oasis->SetVisibility(ESlateVisibility::Hidden);
+
+	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+	CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UInGameHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -216,22 +219,24 @@ void UInGameHUD::UpdateProgress(UMaterialInstanceDynamic*& MID, float Percent)
 	}
 }
 
-void UInGameHUD::OpenGoal(bool bIsOpen)
+void UInGameHUD::OpenGoal()
 {
 	ElapsedTime = 0.f;
-	TotalDuration = 3.0f;
+	TotalDuration = 1.0f;
 
 	StartPos = UWidgetLayoutLibrary::SlotAsCanvasSlot(Goal)->GetPosition();
 
 	EndPos = StartPos;
-	EndPos.Y = bIsOpen ? -30 : 270;
+	EndPos.Y = (StartPos.Y == 180) ? -30 : 180;
 
 	GetWorld()->GetTimerManager().SetTimer(BorderMoveTimerHandle, this, &UInGameHUD::UpdateBorderPosition, 0.01f, true);
+
+	SetGoalText(CurrentPhase + 1);
 }
 
 void UInGameHUD::UpdateBorderPosition()
 {
-	if (!TargetBorder)
+	if (!Goal)
 	{
 		GetWorld()->GetTimerManager().ClearTimer(BorderMoveTimerHandle);
 		return;
@@ -255,6 +260,8 @@ void UInGameHUD::UpdateBorderPosition()
 
 void UInGameHUD::SetGoalText(int32 Phase)
 {
+	if (Phase < 0 || Phase >= 4) return;
+
 	GoalBarText->SetText(FText::FromString(GoalBarTexts[Phase]));
 	GoalText->SetText(FText::FromString(GoalTexts[Phase]));
 
@@ -304,7 +311,7 @@ void UInGameHUD::ApplyMarkerRotation(UImage* Marker, float Angle)
 {
 	if (!Marker) return;
 
-	FWidgetTransform Transform = Marker->RenderTransform;
+	FWidgetTransform Transform = Marker->GetRenderTransform();
 	Transform.Angle = Angle;
 	Marker->SetRenderTransform(Transform);
 }
