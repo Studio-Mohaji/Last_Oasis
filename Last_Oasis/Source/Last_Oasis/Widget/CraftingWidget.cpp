@@ -259,6 +259,12 @@ void UCraftingWidget::CraftingItem()
         }
     }
 
+    if (SelectedRecipeState.RecipeItem == CraftingManager->WeapeonCraftingItem)
+    {
+
+    }
+
+
 	// 제작창 업데이트
     CraftingItemUpdate();
 }

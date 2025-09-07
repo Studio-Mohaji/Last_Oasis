@@ -13,6 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRecipeUpdated);
 
 class AInteractiveActor;
 class ACraftingManager;
+struct FDropItemData;
 
 USTRUCT(BlueprintType, Blueprintable)
 struct FRecipeUnlockedStruct
@@ -61,6 +62,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void GetItem(AInteractiveActor* InteractiveActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void GetDropItemData(const TArray<FDropItemData>& AcquiredItemData);
 
 	void CheckRecipe(UDataAssetBase* ItemData);
 

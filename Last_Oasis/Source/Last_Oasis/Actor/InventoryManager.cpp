@@ -76,15 +76,22 @@ void AInventoryManager::GetItem(AInteractiveActor* InteractiveActor)
 {
     if (!InteractiveActor) return;
 
-    for (const FDropItemData& DropData : InteractiveActor->DropItems)
+    GetDropItemData(InteractiveActor->DropItems);
+}
+
+void AInventoryManager::GetDropItemData(const TArray<FDropItemData>& AcquiredItemData)
+{
+	if (AcquiredItemData.Num() <= 0) return;
+
+    for (const FDropItemData& DropData : AcquiredItemData)
     {
         if (!DropData.DropItemData) continue;
 
         int32 RandomRoll = FMath::RandRange(1, 100);
         if (RandomRoll > DropData.DropChance) // È¹µæ ½ÇÆÐ
         {
-			UE_LOG(LogTemp, Warning, TEXT("Item drop chance failed)"));
-            continue; 
+            UE_LOG(LogTemp, Warning, TEXT("Item drop chance failed)"));
+            continue;
         }
 
         // µå¶ø °³¼ö
@@ -120,7 +127,7 @@ void AInventoryManager::GetItem(AInteractiveActor* InteractiveActor)
                     {
                         UE_LOG(LogTemp, Warning, TEXT("You can't have duplicated item: %s"), *ItemData->ItemName.ToString());
                     }
-                    break; 
+                    break;
                 }
             }
 
