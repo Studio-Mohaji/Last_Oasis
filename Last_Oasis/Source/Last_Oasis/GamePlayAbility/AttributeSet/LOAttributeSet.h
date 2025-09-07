@@ -40,9 +40,6 @@ class LAST_OASIS_API ULOAttributeSet : public UAttributeSet
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data) override;
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float LastTemperature = 36.5;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = true))

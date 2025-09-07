@@ -18,7 +18,7 @@ ULOAttributeSet::ULOAttributeSet() :
 	Damage(20.f),
 	Speed(450.f)
 {
-	LastTemperature = GetTemperature();
+	
 }
 
 void ULOAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
