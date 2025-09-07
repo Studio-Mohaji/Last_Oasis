@@ -73,6 +73,7 @@ private:
 	int32 LastPrintedMinute = -1;
 
 	FTimerHandle TimeHandle;
+	FTimerHandle HUDCheckTimerHandle;
 
 	int32 Days = 1;
 	ALOPlayerController* PC;

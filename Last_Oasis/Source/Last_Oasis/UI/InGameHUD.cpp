@@ -52,21 +52,13 @@ void UInGameHUD::NativeConstruct()
 	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
 	CraftingWidget->SetVisibility(ESlateVisibility::Hidden);
 
-	SetBuildings(Cast<APlayerCharacter>(GetOwningPlayer()->GetPawn()), 
-		FVector(5000, -5000, 0), FVector(5000, 5000, 0), FVector(-5000, 5000, 0));
 }
 
 void UInGameHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	
-	UE_LOG(LogTemp, Warning, TEXT("Tick null %d"), !Player);
 
 	if (!Player) return;
-
-	//UE_LOG(LogTemp, Warning, TEXT("Tick null %d"), !Player);
-
-	float PlayerYaw = Player->GetActorRotation().Yaw;
 
 	if (CurrentPhase >= 1)
 	{
