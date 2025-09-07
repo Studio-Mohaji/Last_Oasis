@@ -18,19 +18,73 @@ ULOAttributeSet::ULOAttributeSet() :
 	Damage(20.f),
 	Speed(450.f)
 {
-	
+	LastTemperature = GetTemperature();
 }
 
 void ULOAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent();
-	if (!ASC) return;
-	if (Attribute == GetThirstAttribute() && (GetThirst() - NewValue) > 0 &&
-	ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Game.Day"))) &&
-	ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow"))))
-	{
-		float Delta = GetThirst() - NewValue;
-		NewValue = GetThirst() - Delta * 0.75f;
-	}
+
 }
 
+bool ULOAttributeSet::PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data)
+{
+	if (Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.Warm"))) &&
+		Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Game.Night"))))
+	{
+		if (Data.EvaluatedData.Attribute.AttributeName == GetTemperatureAttribute().AttributeName)
+		{
+			if (Temperature.GetCurrentValue() >= 36.5)
+			{
+				Data.EvaluatedData.Magnitude = 0;
+			}
+			else
+			{
+				Data.EvaluatedData.Magnitude = 0.01;
+			}
+		}
+	}
+
+	if (Data.EvaluatedData.Attribute.AttributeName == GetThirstAttribute().AttributeName &&
+		Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Game.Day"))) &&
+		Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow"))))
+	{
+		if (!FMath::IsNearlyEqual(Data.EvaluatedData.Magnitude, 10.f))
+			Data.EvaluatedData.Magnitude *= 0.75;
+	}
+
+	if (Data.EvaluatedData.Attribute.AttributeName == GetTemperatureAttribute().AttributeName &&
+	Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Game.Day"))) &&
+	Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.Thirst.Hydrated"))))
+	{
+		if (!FMath::IsNearlyEqual(Data.EvaluatedData.Magnitude, 0.2f))
+			Data.EvaluatedData.Magnitude *= 0.5;
+	}
+	
+	if (Data.EvaluatedData.Attribute.AttributeName == GetTemperatureAttribute().AttributeName &&
+		Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Game.Day"))) &&
+		Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow"))))
+	{
+		Data.EvaluatedData.Magnitude *= 0.5;
+	}
+	
+	return true;
+}
+
+void ULOAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	if (Data.EvaluatedData.Attribute.AttributeName == GetHealthAttribute().AttributeName)
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0, GetMaxHealth()));
+	}
+
+	if (Data.EvaluatedData.Attribute.AttributeName == GetThirstAttribute().AttributeName)
+	{
+		SetThirst(FMath::Clamp(GetThirst(), 0, GetMaxThirst()));
+	}
+
+	if (Data.EvaluatedData.Attribute.AttributeName == GetHungerAttribute().AttributeName)
+	{
+		SetHunger(FMath::Clamp(GetHunger(), 0, GetMaxHunger()));
+	}
+}
