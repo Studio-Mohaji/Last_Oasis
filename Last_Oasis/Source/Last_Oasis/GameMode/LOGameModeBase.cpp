@@ -24,6 +24,7 @@ void ALOGameModeBase::Respawn()
         if (NewPawn)
         {
             Controller->Possess(NewPawn);
+            SandStorm = false;
             AddMinute(360);
         }
     }
@@ -129,7 +130,7 @@ void ALOGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
     Sun = Cast<ADirectionalLight>(UGameplayStatics::GetActorOfClass(GetWorld(), ADirectionalLight::StaticClass()));
-    ElapsedTime = (6.0f / 24.0f) * DayLength;
+    ElapsedTime = (6.05f / 24.0f) * DayLength;
 	//GetWorld()->GetTimerManager().SetTimer(TimeHandle, this, &ALOGameModeBase::UpdateGameTime, 1.0f, true);
 
     PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
@@ -169,12 +170,13 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
         {
             if (!SandStorm)
             {
-                if (FMath::FRand() < 0.02f)
+                if (FMath::FRand() < 0.95f)
                 {
                     APlayerController* Controller = GetWorld()->GetFirstPlayerController();
                     if (Controller)
                     {
-                        Cast<IAbilitySystemInterface>(Controller)->GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.SandStorm"));
+                        SandStorm = true;
+                        Cast<IAbilitySystemInterface>(Controller->GetPawn())->GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.SandStorm"));
                     }
                 }
             }
@@ -185,7 +187,8 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
                     APlayerController* Controller = GetWorld()->GetFirstPlayerController();
                     if (Controller)
                     {
-                        Cast<IAbilitySystemInterface>(Controller)->GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.SandStorm"));
+                        SandStorm = false;
+                        Cast<IAbilitySystemInterface>(Controller->GetPawn())->GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.SandStorm"));
                     }
                 }
             }
