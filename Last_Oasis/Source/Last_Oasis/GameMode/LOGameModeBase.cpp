@@ -203,17 +203,24 @@ void ALOGameModeBase::SpawnBuilding()
     {
         Locations.Add(FoundActors[i]->GetActorLocation());
 
+        AActor* Spawned = nullptr;
+
         if (i == 0 && BuildingA)
         {
             LaboA = GetWorld()->SpawnActor<AActor>(BuildingA, Locations[0], FRotator::ZeroRotator);
         }
         else if (i == 1 && BuildingB)
         {
-            GetWorld()->SpawnActor<AActor>(BuildingB, Locations[1], FRotator::ZeroRotator);
+            Spawned = GetWorld()->SpawnActor<AActor>(BuildingB, Locations[1], FRotator::ZeroRotator);
         }
         else if (i == 2 && BuildingC)
         {
-            GetWorld()->SpawnActor<AActor>(BuildingC, Locations[2], FRotator::ZeroRotator);
+            Spawned = GetWorld()->SpawnActor<AActor>(BuildingC, Locations[2], FRotator::ZeroRotator);
+        }
+
+        if (Spawned)
+        {
+            SpawnedBuildings.Add(Spawned);
         }
     }
 

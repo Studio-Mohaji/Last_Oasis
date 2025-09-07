@@ -84,4 +84,7 @@ private:
 
 	int32 Days = 1;
 	ALOPlayerController* PC;
+public:
+	UPROPERTY()
+	TArray<AActor*> SpawnedBuildings;
 };
