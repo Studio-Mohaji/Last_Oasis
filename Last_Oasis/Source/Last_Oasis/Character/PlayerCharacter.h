@@ -24,6 +24,13 @@ public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void FellOutOfWorld(const class UDamageType& dmgType) override;
 
+	UFUNCTION(BlueprintCallable)
+	void SpawnPlayer();
+	UFUNCTION(BlueprintCallable)
+	void SetSpawnPoint();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector SpawnPoint;
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void PossessedBy(AController* NewController) override;
