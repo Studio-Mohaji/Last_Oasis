@@ -30,6 +30,17 @@ void UCraftingWidget::NativeConstruct()
 
 void UCraftingWidget::CraftingRecipeInitialize()
 {
+    if (!IsValid(CraftingManager))
+    {
+        FTimerHandle RetryHandle;
+        GetWorld()->GetTimerManager().SetTimer(
+            RetryHandle, this, &UCraftingWidget::CraftingRecipeInitialize, 
+            0.05f, false
+        );
+
+        return;
+    }
+
     CraftingRecipeList->ClearChildren(); 
     RecipeListArray.Empty();
 

@@ -15,12 +15,20 @@ void UInventoryWidget::NativeConstruct()
         UGameplayStatics::GetActorOfClass(GetWorld(), AInventoryManager::StaticClass()));
 
     InitializeSlots();
-    UpdateSlot();
+    //UpdateSlot();
 }
 
 void UInventoryWidget::InitializeSlots()
 {
-    if (!GridBox || !ItemSlotWidgetClass) return;
+    if (!GridBox || !ItemSlotWidgetClass || !InventoryManager)
+    {
+        FTimerHandle RetryHandle;
+        GetWorld()->GetTimerManager().SetTimer(RetryHandle, [this]()
+            {
+                InitializeSlots();
+            }, 0.05f, false);
+        return;
+    }
 
     const int32 Rows = 6;
     const int32 Columns = 4;
@@ -52,16 +60,21 @@ void UInventoryWidget::InitializeSlots()
         }
     }
 
-	InventoryManager->OnInventoryUpdated.AddDynamic(this, &UInventoryWidget::UpdateSlot);
+    if(InventoryManager)
+	    InventoryManager->OnInventoryUpdated.AddDynamic(this, &UInventoryWidget::UpdateSlot);
 
-
-    if (!IsValid(ItemInfoWidget))
+    if (ItemInfoWidget == nullptr || !IsValid(ItemInfoWidget))
     {
         ItemInfoWidget = CreateWidget<UItemInfoWidget>(GetWorld(), ItemInfoWidgetClass);
-        ItemInfoWidget->AddToViewport();
-        ItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
+
+        if (ItemInfoWidget)
+        {
+            ItemInfoWidget->AddToViewport();
+            ItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
+        }       
     }
 
+    UpdateSlot();
 }
 
 void UInventoryWidget::HandleSlotClicked(UInventorySlotWidget* ClickedSlot)
@@ -78,6 +91,8 @@ void UInventoryWidget::HandleSlotClicked(UInventorySlotWidget* ClickedSlot)
 
 void UInventoryWidget::UpdateSlot()
 {
+    if (!InventoryManager || InventorySlots.Num() == 0) return;
+
     const int32 SlotCount = InventorySlots.Num();
     const int32 ItemCount = InventoryManager->ItemDataList.Num();
 

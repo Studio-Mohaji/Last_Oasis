@@ -416,6 +416,16 @@ void APlayerCharacter::InitWidgetsFromHUD()
     InventoryWidget = LOPC->HUD->GetInventoryWidget();
     CraftingWidget = LOPC->HUD->GetCraftingWidget();
 
+    if (!CraftingWidget || !InventoryWidget)
+    {
+        FTimerHandle RetryHandle;
+        GetWorld()->GetTimerManager().SetTimer(RetryHandle, [this]()
+            {
+                InitWidgetsFromHUD();
+            }, 0.05f, false);
+        return;
+    }
+
     InventoryManager = Cast<AInventoryManager>(
         UGameplayStatics::GetActorOfClass(GetWorld(), AInventoryManager::StaticClass()));
 

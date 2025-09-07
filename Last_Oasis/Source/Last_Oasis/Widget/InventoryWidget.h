@@ -15,9 +15,9 @@ class UItemInfoWidget;
 class UInventorySlotWidget;
 class UDataAssetBase;
 class UItemListDataAsset;
-/**
- * 
- */
+
+
+
 UCLASS()
 class LAST_OASIS_API UInventoryWidget : public UUserWidget
 {
