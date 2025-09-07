@@ -9,6 +9,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCraftingEvent, int32, SlotIndex);
 
+class UDataAssetBase;
+
 UCLASS()
 class LAST_OASIS_API ACraftingManager : public AActor
 {
@@ -35,5 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Crafting")
 	void StoryItemCraftingEvent(int32 index);
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	UDataAssetBase* WeapeonCraftingItem;
 };
+S
