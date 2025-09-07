@@ -15,7 +15,8 @@ class LAST_OASIS_API ALOPlayerController : public APlayerController
 
 public:
 	void InitHUD();
-	
+	void fucking();
+	virtual void OnPossess(APawn* InPawn) override;
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
@@ -25,4 +26,6 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHUDInitialized OnHUDInitialized;
+	bool fuck = false;
+
 };

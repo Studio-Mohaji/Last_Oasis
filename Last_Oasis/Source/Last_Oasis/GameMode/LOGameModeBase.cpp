@@ -11,6 +11,32 @@ ALOGameModeBase::ALOGameModeBase()
     PrimaryActorTick.bCanEverTick = true;
 }
 
+void ALOGameModeBase::Respawn()
+{
+    APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+    if (Controller)
+    {
+        if (!SpawnActor)
+        {
+            SpawnActor = FindPlayerStart(Controller);
+        }
+        APawn* NewPawn = SpawnDefaultPawnFor(Controller, SpawnActor);
+        if (NewPawn)
+        {
+            Controller->Possess(NewPawn);
+        }
+    }
+}
+
+void ALOGameModeBase::SetSpawnPoint()
+{
+    APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+    if (Controller)
+    {
+        SpawnPoint = Controller->GetPawn()->GetActorLocation();
+    }
+}
+
 void ALOGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();

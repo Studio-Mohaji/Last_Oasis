@@ -6,12 +6,17 @@
 #include "GamePlayAbility/LOAbilitySystemComponent.h"
 #include "GamePlayAbility/AttributeSet/LOAttributeSet.h"
 
+void ALOPlayerState::InitASC()
+{
+	ASC = NewObject<ULOAbilitySystemComponent>(this, ULOAbilitySystemComponent::StaticClass(), TEXT("ASC"));
+	ASC->RegisterComponent();
+	AttributeSet = NewObject<ULOAttributeSet>(this, ULOAttributeSet::StaticClass(), TEXT("AttributeSet"));
+	ASC->AddAttributeSetSubobject(AttributeSet.Get());
+	ASC -> SetIsReplicated(true);
+}
+
 ALOPlayerState::ALOPlayerState()
 {
-	AttributeSet = CreateDefaultSubobject<ULOAttributeSet>(TEXT("AttributeSet"));
-	ASC = CreateDefaultSubobject<ULOAbilitySystemComponent>(TEXT("ASC"));
-	ASC->AddAttributeSetSubobject<ULOAttributeSet>(AttributeSet);
-	ASC -> SetIsReplicated(true);
 }
 
 class UAbilitySystemComponent* ALOPlayerState::GetAbilitySystemComponent() const

@@ -34,6 +34,18 @@ public:
 	//
 	// UFUNCTION(BlueprintCallable, Category="DayNight")
 	// FString GetTimeString() const;
+
+	UFUNCTION(BlueprintCallable)
+	void Respawn();
+
+	UFUNCTION(BlueprintCallable)
+	void SetSpawnPoint();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<AActor> SpawnActor;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector SpawnPoint;
 	
 protected:
 	virtual void BeginPlay() override;

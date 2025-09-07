@@ -6,11 +6,11 @@
 
 ULOAttributeSet::ULOAttributeSet() :
 	MaxHealth(100.f),
-	Health(100.f),
+	Health(50.f),
 	MaxHunger(100.f),
-	Hunger(90.f),
+	Hunger(50.f),
 	MaxThirst(100.f),
-	Thirst(90.f),
+	Thirst(50.f),
 	MaxTemperature(100.f),
 	MinTemperature(0.f),
 	Temperature(36.5f),
@@ -28,6 +28,10 @@ void ULOAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 
 bool ULOAttributeSet::PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data)
 {
+	if (Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Dead")))
+	{
+		return false;
+	}
 	if (Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.Warm"))) &&
 		Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("Game.Night"))))
 	{
@@ -76,7 +80,7 @@ void ULOAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 	if (Data.EvaluatedData.Attribute.AttributeName == GetHealthAttribute().AttributeName)
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0, GetMaxHealth()));
-		if (GetHealth()==0)
+		if (GetHealth() == 0 && Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Dead")))
 		{
 			Data.Target.AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Dead"));
 		}

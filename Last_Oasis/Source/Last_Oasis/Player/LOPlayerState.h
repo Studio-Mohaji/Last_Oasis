@@ -15,6 +15,7 @@ class LAST_OASIS_API ALOPlayerState : public APlayerState, public IAbilitySystem
 {
 	GENERATED_BODY()
 public:
+	void InitASC();
 	ALOPlayerState();
 	
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;

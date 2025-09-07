@@ -12,11 +12,26 @@ void ALOPlayerController::InitHUD()
 		if (HUD)
 		{
 			HUD->AddToViewport();
-			HUD->SetAbilitySystemComponent();
+			fucking();
 
 			OnHUDInitialized.Broadcast();
 		}
 	}
+}
+
+void ALOPlayerController::fucking()
+{
+	if (HUD)
+	{
+		HUD->SetAbilitySystemComponent();
+	}
+}
+
+void ALOPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	if (fuck)
+		fucking();
 }
 
 void ALOPlayerController::BeginPlay()
@@ -24,4 +39,5 @@ void ALOPlayerController::BeginPlay()
 	Super::BeginPlay();
 	
 	InitHUD();
+	fuck = true;
 }

@@ -23,14 +23,9 @@ public:
 	APlayerCharacter();
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void FellOutOfWorld(const class UDamageType& dmgType) override;
-
-	UFUNCTION(BlueprintCallable)
-	void SpawnPlayer();
-	UFUNCTION(BlueprintCallable)
-	void SetSpawnPoint();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector SpawnPoint;
-
+	
+	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
+	void StartReduceStat();
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void PossessedBy(AController* NewController) override;
@@ -44,14 +39,15 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> FollowCamera;
 	
+protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class ULOAbilitySystemComponent> ASC;
-
 	
 //Anim
 public:
 	FORCEINLINE virtual class UAnimMontage* GetAttackMontage() const { return AttackMonatage; }
 	FORCEINLINE virtual class UAnimMontage* GetDeadMontage() const { return DeadMontage; }
+	void InputPressed(int32 InputID);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = Anim)
@@ -99,7 +95,6 @@ protected:
 private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void InputPressed(int32 InputID);
 	void InputReleased(int32 InputID);
 	void ToggleCraftFunction(const FInputActionValue& Value);
 	void ToggleInventoryFunction(const FInputActionValue& Value);

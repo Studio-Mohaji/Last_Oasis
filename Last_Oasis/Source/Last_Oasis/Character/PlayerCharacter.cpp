@@ -168,6 +168,7 @@ APlayerCharacter::APlayerCharacter()
     WeaponRange1->SetupAttachment(GetMesh());
     WeaponRange2->SetupAttachment(GetMesh());
     WeaponRange3->SetupAttachment(GetMesh());
+    
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
@@ -218,44 +219,36 @@ void APlayerCharacter::FellOutOfWorld(const class UDamageType& dmgType)
     Super::FellOutOfWorld(dmgType);
 }
 
-void APlayerCharacter::SpawnPlayer()
-{
-    SetActorLocation(SpawnPoint);
-    GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-}
-
-void APlayerCharacter::SetSpawnPoint()
-{
-    SpawnPoint = GetActorLocation();
-}
-
 void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
     Sun = Cast<ADirectionalLight>(UGameplayStatics::GetActorOfClass(GetWorld(), ADirectionalLight::StaticClass()));
     LOPC = Cast<ALOPlayerController>(NewController);
-
-
+    
     if (ALOPlayerState* PS = GetPlayerState<ALOPlayerState>())
     {
+        PS->InitASC();
         ASC = Cast<ULOAbilitySystemComponent>(PS->GetAbilitySystemComponent());
         ASC ->InitAbilityActorInfo(PS,this);
         ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetHealthAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnHealthChanged);
         ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetHungerAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnHungerChanged);
         ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetThirstAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnThirstChanged);
         ASC ->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetTemperatureAttribute()).AddUObject(ASC, &ULOAbilitySystemComponent::OnTemperatureChanged);
-    }
-    for (const auto& StartAbility : StartAbilities)
-    {
-        FGameplayAbilitySpec StartSpec(StartAbility);
-        ASC->GiveAbility(StartSpec);
-    }
+        for (const auto& StartAbility : StartAbilities)
+        {
+            FGameplayAbilitySpec StartSpec(StartAbility);
+            ASC->GiveAbility(StartSpec);
+        }
 
-    for (const auto& StartInputAbilitie : StartInputAbilities)
-    {
-        FGameplayAbilitySpec StartSpec(StartInputAbilitie.Value);
-        StartSpec.InputID = StartInputAbilitie.Key;
-        ASC->GiveAbility(StartSpec);
+        for (const auto& StartInputAbilitie : StartInputAbilities)
+        {
+            FGameplayAbilitySpec StartSpec(StartInputAbilitie.Value);
+            StartSpec.InputID = StartInputAbilitie.Key;
+            ASC->GiveAbility(StartSpec);
+        }
+        ALOPlayerController* PlayerController = CastChecked<ALOPlayerController>(NewController);
+        PlayerController->ConsoleCommand(TEXT("Showdebug Abilitysystem"));
+        StartReduceStat();
     }
 }
 
