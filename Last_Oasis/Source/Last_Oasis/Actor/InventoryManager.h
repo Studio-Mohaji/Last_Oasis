@@ -81,4 +81,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")	
 	TArray<FRecipeUnlockedStruct> RecipeItems;
 
+
+public:
+	// Usable ItemData
+
+	UPROPERTY(EditDefaultsOnly, Category = "Usable")
+	TArray<UDataAssetBase*> UsableItemDatas;
+
 };

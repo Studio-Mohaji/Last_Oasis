@@ -20,14 +20,18 @@ FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, cons
 	if (ItemImage->GetVisibility() == ESlateVisibility::Hidden)
 		return FReply::Unhandled();
 
-	if (!ParentInventoryWidget || !ParentInventoryWidget->ItemInfoWidget)
-		return FReply::Unhandled();
-
-	if (!InfoWidget->IsInViewport())
+	if (!InfoWidget)
 	{
+		if (!ParentInventoryWidget || !ParentInventoryWidget->ItemInfoWidget)
+			return FReply::Unhandled();
+
 		InfoWidget = ParentInventoryWidget->ItemInfoWidget;
-		InfoWidget->AddToViewport();
 	}
+	
+	if (InfoWidget->GetVisibility() != ESlateVisibility::Visible)
+		InfoWidget->SetVisibility(ESlateVisibility::Visible);
+
+
 
 	FVector2D MousePos = InMouseEvent.GetScreenSpacePosition();
 	MousePos.Y -= 170.0f; 
@@ -48,7 +52,7 @@ FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, cons
 void UInventorySlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 	if (InfoWidget && InfoWidget->IsInViewport())
-		InfoWidget->RemoveFromParent();
+		InfoWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 FReply UInventorySlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

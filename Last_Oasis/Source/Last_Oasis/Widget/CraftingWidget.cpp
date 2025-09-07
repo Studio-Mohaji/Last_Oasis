@@ -5,6 +5,7 @@
 #include "../Widget/CraftingItemList.h"
 #include "../Widget/CraftingRecipeList.h"
 #include "Kismet/GameplayStatics.h"
+#include "Data/DataAssetBase.h"
 
 
 void UCraftingWidget::NativeConstruct()
@@ -76,7 +77,7 @@ void UCraftingWidget::CraftingRecipeInitialize()
             {
                 // 데이터 전달
                 CraftingRecipeList->AddChild(NewRecipeWidget);
-
+                NewRecipeWidget->ParentCraftingWidget = this;
                 NewRecipeWidget->SetVisibility(ESlateVisibility::Hidden);
                 RecipeListArray.Add(NewRecipeWidget);
             }
@@ -117,8 +118,6 @@ void UCraftingWidget::UpdateSelection(UCraftingRecipeList* SelectedRecipe)
 
     // 선택된 Recipe의 ItemList 업데이트
     CraftingItemUpdate();
-
-    CraftingItemName->SetText(FText::FromName(SelectedRecipe->ItemData->ItemName));
 }
 
 // 켜고 끌때마다 업데이트
@@ -246,16 +245,17 @@ void UCraftingWidget::CraftingItem()
 
 
     for (int i = 0; i < InventoryManager->RecipeItems.Num(); i++)
-    {
-        // InventoryManage의 레시피 아이템에 해당하는 아이템의 데이터 => 중요 제작 아이템
+    {// InventoryManage의 레시피 아이템에 해당하는 아이템의 데이터 => 중요 제작 아이템
         if (InventoryManager->RecipeItems[i].ItemData == SelectedRecipeState.RecipeItem)
         {
-            
 			// TImer로 몇초 뒤에 알림UI & 제작창 닫기 함수 실행.
-            CloseCraftingUI(i);
-
-
-
+            FTimerHandle CloseHandle;
+            GetWorld()->GetTimerManager().SetTimer(
+                CloseHandle, 
+                FTimerDelegate::CreateUObject(this, &UCraftingWidget::CloseCraftingUI, i), 
+                1.0f, false
+            );
+            break;
         }
     }
 
@@ -268,8 +268,8 @@ void UCraftingWidget::CloseCraftingUI(int32 index)
     CraftingManager->StoryItemCraftingEvent(index);
 
     //숨기기
-    if (CraftingUIBox->GetVisibility() == ESlateVisibility::Visible)
+    if (GetVisibility() == ESlateVisibility::Visible)
     {
-        CraftingUIBox->SetVisibility(ESlateVisibility::Hidden);
+        SetVisibility(ESlateVisibility::Hidden);
     }
 }
