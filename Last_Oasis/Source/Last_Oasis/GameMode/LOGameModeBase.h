@@ -51,6 +51,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SpawnBuilding();
 
+	UFUNCTION(BlueprintCallable)
+	void SpawnFarm();
+
 	UFUNCTION()
 	void UpdateGameTime();
 
@@ -77,4 +80,26 @@ private:
 
 	int32 Days = 1;
 	ALOPlayerController* PC;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> ActorClass1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> ActorClass2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> ActorClass3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> ActorClass4;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> ActorClass5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector BoxCenter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	FVector BoxExtent;
 };
