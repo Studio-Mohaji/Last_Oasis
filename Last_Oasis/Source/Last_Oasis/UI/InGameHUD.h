@@ -25,6 +25,12 @@ public:
 	void SetAbilitySystemComponent();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ShowToastMsg(const FString& InText);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void Fade();
+
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
