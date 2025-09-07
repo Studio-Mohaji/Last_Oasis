@@ -102,4 +102,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FVector BoxExtent;
+
+public:
+	UPROPERTY()
+	TArray<AActor*> SpawnedBuildings;
 };
