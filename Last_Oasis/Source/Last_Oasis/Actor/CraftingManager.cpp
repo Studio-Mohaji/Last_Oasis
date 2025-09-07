@@ -31,3 +31,8 @@ void ACraftingManager::StoryItemCraftingEvent(int32 index)
 	OnCraftingEvent.Broadcast(index);
 }
 
+void ACraftingManager::WeaponCrafting()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Weapon Crafting Event"));
+}
+

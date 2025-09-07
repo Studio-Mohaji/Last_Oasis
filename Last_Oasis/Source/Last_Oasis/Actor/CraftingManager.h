@@ -39,5 +39,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	UDataAssetBase* WeapeonCraftingItem;
+
+	UFUNCTION(BlueprintCallable, Category = "Crafting")
+	void WeaponCrafting();
 };
-S

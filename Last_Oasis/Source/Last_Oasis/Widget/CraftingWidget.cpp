@@ -261,9 +261,8 @@ void UCraftingWidget::CraftingItem()
 
     if (SelectedRecipeState.RecipeItem == CraftingManager->WeapeonCraftingItem)
     {
-
+		CraftingManager->WeaponCrafting();
     }
-
 
 	// 제작창 업데이트
     CraftingItemUpdate();
