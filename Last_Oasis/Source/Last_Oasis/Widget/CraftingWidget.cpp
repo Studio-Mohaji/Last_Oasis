@@ -111,24 +111,50 @@ void UCraftingWidget::UpdateSelection(UCraftingRecipeList* SelectedRecipe)
 // 켜고 끌때마다 업데이트
 void UCraftingWidget::CraftingRecipeUpdate()
 {
-    //for (int32 i = 0; i < CraftingManager->RecipeStates.Num(); ++i)
-    //{
-    //    const FRecipeState& RecipeState = CraftingManager->RecipeStates[i];
+    if (!CraftingManager) return;
 
-    //    if (RecipeState.bUnlocked && RecipeListArray.IsValidIndex(i))
-    //    {
-    //        UCraftingRecipeList* TargetWidget = RecipeListArray[i];
-    //        if (TargetWidget && TargetWidget->GetVisibility() != ESlateVisibility::Visible)
-    //        {
-    //            TargetWidget->ItemData = RecipeState.RecipeItem;
-    //            TargetWidget->SetRecipeData();
-    //            TargetWidget->SetVisibility(ESlateVisibility::Visible);
-    //        }
-    //    }
-    //}
+    TArray<UUserWidget*> UnlockedWidgets;
+    TArray<UUserWidget*> LockedWidgets;
 
+    // 기존 위젯 분류
+    for (int32 i = 0; i < RecipeListArray.Num(); ++i)
+    {
+        UCraftingRecipeList* Widget = RecipeListArray[i];
+        if (!Widget) continue;
 
-    CraftingRecipeInitialize();
+        const FRecipeState& RecipeState = CraftingManager->RecipeStates[i];
+
+        // 데이터 갱신
+        Widget->ItemData = RecipeState.RecipeItem;
+        Widget->SetRecipeData();
+
+        // Visible 처리
+        if (RecipeState.bUnlocked)
+        {
+            Widget->SetVisibility(ESlateVisibility::Visible);
+            UnlockedWidgets.Add(Widget);
+        }
+        else
+        {
+            Widget->SetVisibility(ESlateVisibility::Hidden);
+            LockedWidgets.Add(Widget);
+        }
+    }
+
+    // UI 순서 재배치
+    CraftingRecipeList->ClearChildren();
+
+    for (UUserWidget* Widget : UnlockedWidgets)
+    {
+        CraftingRecipeList->AddChild(Widget);
+    }
+
+    for (UUserWidget* Widget : LockedWidgets)
+    {
+        CraftingRecipeList->AddChild(Widget);
+    }
+
+    //CraftingRecipeInitialize();
 	// 레시피 업데이트할때, ItemList도 업데이트
     CraftingItemUpdate();
 }
