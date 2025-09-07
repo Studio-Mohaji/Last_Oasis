@@ -16,7 +16,7 @@ ULOAttributeSet::ULOAttributeSet() :
 	Temperature(36.5f),
 	Level(1.f),
 	Damage(20.f),
-	Speed(450.f)
+	Speed(550.f)
 {
 	
 }
