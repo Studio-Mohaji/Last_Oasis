@@ -83,6 +83,7 @@ void ULOAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 		if (GetHealth() == 0 && Data.Target.HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Dead")))
 		{
 			Data.Target.AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Dead"));
+			Data.Target.RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.CanAttack"));
 		}
 	}
 
