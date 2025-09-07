@@ -16,11 +16,11 @@ void UInGameHUD::NativeConstruct()
 	SunTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_Sun.MagicalGirl_Sun"));
 	MoonTexture = LoadObject<UTexture2D>(nullptr, TEXT("/Game/Mireu/Data/Image/MagicalGirl_DarkSun.MagicalGirl_DarkSun"));
 
-	GoalTexts = { 
-		TEXT("청사진을 활용하여 라디오 수신기를 제작하세요. 수신기는 다른 연구소의 위치를 파악할 수 있는 중요 장비입니다."),
-		TEXT("라디오 수신기를 사용하여 또 다른 연구소의 위치를 파악하고, 그곳으로 향하세요. 새로운 정보를 얻을 수 있을지도 모릅니다."),
-		TEXT("청사진을 활용하여 지하 신호 해독기를 제작하세요. 해독기로 지하 대피 시설의 정확한 위치를 알 수 있습니다."),
-		TEXT("얼마 남지 않았습니다. 지하 대피 시설로 향하세요.")
+	/*GoalTexts = {
+	TEXT("청사진을 활용하여 라디오 수신기를 제작하세요. 수신기는 다른 연구소의 위치를 파악할 수 있는 중요 장비입니다."),
+	TEXT("라디오 수신기를 사용하여 또 다른 연구소의 위치를 파악하고, 그곳으로 향하세요. 새로운 정보를 얻을 수 있을지도 모릅니다."),
+	TEXT("청사진을 활용하여 지하 신호 해독기를 제작하세요. 해독기로 지하 대피 시설의 정확한 위치를 알 수 있습니다."),
+	TEXT("얼마 남지 않았습니다. 지하 대피 시설로 향하세요.")
 	};
 
 	GoalBarTexts = {
@@ -28,7 +28,7 @@ void UInGameHUD::NativeConstruct()
 		TEXT("다른 연구소로 향하기"),
 		TEXT("지하 신호 해독기 제작하기"),
 		TEXT("지하 대피 시설로 향하기")
-	};
+	};*/
 
 	InitProgress(Thirst, ThirstMID);
 	InitProgress(Hunger, HungerMID);
