@@ -51,6 +51,7 @@ protected:
 public:
 	FORCEINLINE virtual class UAnimMontage* GetAttackMontage() const { return AttackMonatage; }
 	FORCEINLINE virtual class UAnimMontage* GetDeadMontage() const { return DeadMontage; }
+	UFUNCTION(BlueprintCallable)
 	void InputPressed(int32 InputID);
 
 protected:

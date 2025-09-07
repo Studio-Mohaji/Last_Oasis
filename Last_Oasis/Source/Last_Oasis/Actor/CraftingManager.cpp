@@ -3,6 +3,9 @@
 
 #include "../Actor/CraftingManager.h"
 
+#include "Character/PlayerCharacter.h"
+#include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 ACraftingManager::ACraftingManager()
 {
@@ -33,6 +36,13 @@ void ACraftingManager::StoryItemCraftingEvent(int32 index)
 
 void ACraftingManager::WeaponCrafting()
 {
+	 PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PC)
+	{
+		APlayerCharacter* PlayerChar = Cast<APlayerCharacter>(PC->GetPawn());
+		if (PlayerChar)
+			PlayerChar->GetWeapon();
+	}
 	UE_LOG(LogTemp, Warning, TEXT("Weapon Crafting Event"));
 }
 
