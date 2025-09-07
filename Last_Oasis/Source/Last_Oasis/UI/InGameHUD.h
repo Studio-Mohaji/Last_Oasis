@@ -29,7 +29,10 @@ protected:
 	void OnThirstChanged(const FOnAttributeChangeData& ChangeData);
 	void OnHungerChanged(const FOnAttributeChangeData& ChangeData);	
 	void OnTemperatureChanged(const FOnAttributeChangeData& ChangeData);
-	
+	void OnSpeedChanged(const FOnAttributeChangeData& ChangeData);
+
+	UPROPERTY()
+	TObjectPtr<class UCharacterMovementComponent> CharacterMovementComponent;
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;

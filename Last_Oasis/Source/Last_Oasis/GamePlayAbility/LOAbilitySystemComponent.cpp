@@ -6,13 +6,9 @@
 void ULOAbilitySystemComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
-	UE_LOG(LogTemp,Log,TEXT("hehehe"));
-
 	const ULOAttributeSet* AttrSet = GetSet<ULOAttributeSet>();
 	if (!AttrSet)
 	{
-		UE_LOG(LogTemp,Log,TEXT("fuck"));
-
 		return;
 	}
 
@@ -56,7 +52,7 @@ void ULOAbilitySystemComponent::OnHungerChanged(const FOnAttributeChangeData& Da
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Hunger.Full"));
 		}
 	}
-	else if (Data.NewValue <= 30.f)
+	else if (Data.NewValue <= 10.f)
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Hunger.Fatigue")))
 		{
@@ -92,7 +88,7 @@ void ULOAbilitySystemComponent::OnThirstChanged(const FOnAttributeChangeData& Da
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Thirst.Hydrated"));
 		}
 	}
-	else if (Data.NewValue <= 30.f)
+	else if (Data.NewValue <= 10.f)
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Thirst.Fatigue")))
 		{
@@ -119,23 +115,33 @@ void ULOAbilitySystemComponent::OnThirstChanged(const FOnAttributeChangeData& Da
 
 void ULOAbilitySystemComponent::OnTemperatureChanged(const FOnAttributeChangeData& Data)
 {
-	if (Data.NewValue >= 41.f)
+	if (Data.NewValue >= 35.f && Data.NewValue <= 38)
+	{
+		if(HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature")))
+		{
+			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+		}
+	}
+	else if (Data.NewValue > 41.f)
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.SevereHot")))
 		{
-			//RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.SevereHot"));
+			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateHot"));
+			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildHot"));
 		}
 	}
-	else if (Data.NewValue >= 40.f)
+	else if (Data.NewValue > 40.f)
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateHot")))
 		{
-			//RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateHot"));
+			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildHot"));
 		}
 	}
-	else if (Data.NewValue >= 38.f)
+	else if (Data.NewValue > 38.f)
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildHot")))
 		{
@@ -143,35 +149,32 @@ void ULOAbilitySystemComponent::OnTemperatureChanged(const FOnAttributeChangeDat
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildHot"));
 		}
 	}
-	else if (Data.NewValue <= 32.f)
+	else if (Data.NewValue < 32.f)
 	{
 		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.SevereCold")))
 		{
 			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.SevereCold"));
-		}
-	}
-	else if (Data.NewValue <= 33.f)
-	{
-		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateCold")))
-		{
-			//RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateCold"));
-		}
-	}
-	else if (Data.NewValue <= 35.f)
-	{
-		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildCold")))
-		{
-			//RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
 			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildCold"));
 		}
 	}
-	else
+	else if (Data.NewValue < 33.f)
 	{
-		if(!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature")))
+		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateCold")))
 		{
 			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.ModerateCold"));
+			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildCold"));
+		}
+	}
+	else if (Data.NewValue < 35.f)
+	{
+		if (!HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildCold")))
+		{
+			RemoveTagsByCategory(FGameplayTag::RequestGameplayTag("State.Temperature"));
+			AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Temperature.MildCold"));
+
 		}
 	}
 	UE_LOG(LogTemp,Log,TEXT("%f"),Data.NewValue);

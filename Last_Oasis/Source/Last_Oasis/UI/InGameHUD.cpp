@@ -6,9 +6,11 @@
 #include "Components/ProgressBar.h"
 #include "GameMode/LOGameModeBase.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+#include "Character/PlayerCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Data/GoalDataAsset.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void UInGameHUD::NativeConstruct()
 {
@@ -46,10 +48,23 @@ void UInGameHUD::NativeConstruct()
 void UInGameHUD::SetAbilitySystemComponent()
 {
 	ASC = Cast<IAbilitySystemInterface>(GetOwningPlayer()->GetPawn())->GetAbilitySystemComponent();
-	ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetHealthAttribute()).AddUObject(this, &UInGameHUD::OnHealthChanged);
-	ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetHungerAttribute()).AddUObject(this, &UInGameHUD::OnHungerChanged);
-	ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetThirstAttribute()).AddUObject(this, &UInGameHUD::OnThirstChanged);
-	ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetTemperatureAttribute()).AddUObject(this, &UInGameHUD::OnTemperatureChanged);
+	if (ASC)
+	{
+		UE_LOG(LogTemp,Log,TEXT("BindingDelegate"));
+
+		ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetHealthAttribute()).AddUObject(this, &UInGameHUD::OnHealthChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetHungerAttribute()).AddUObject(this, &UInGameHUD::OnHungerChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetThirstAttribute()).AddUObject(this, &UInGameHUD::OnThirstChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetTemperatureAttribute()).AddUObject(this, &UInGameHUD::OnTemperatureChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(ULOAttributeSet::GetSpeedAttribute()).AddUObject(this, &UInGameHUD::OnSpeedChanged);
+		CharacterMovementComponent = GetWorld()->GetFirstPlayerController()->GetCharacter()->GetCharacterMovement();
+	}
+	else
+	{
+		UE_LOG(LogTemp,Log,TEXT("ASCNULL"));
+
+		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UInGameHUD::SetAbilitySystemComponent);
+	}
 
 }
 
@@ -60,6 +75,7 @@ UAbilitySystemComponent* UInGameHUD::GetAbilitySystemComponent() const
 
 void UInGameHUD::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
 {
+	UE_LOG(LogTemp,Log,TEXT("HealthChange"));
 	Health->SetPercent(ChangeData.NewValue/100);
 }
 
@@ -85,6 +101,11 @@ void UInGameHUD::OnTemperatureChanged(const FOnAttributeChangeData& ChangeData)
 
 	FString NewText = FString::Printf(TEXT("%.1f"), ChangeData.NewValue);
 	TemperatureText->SetText(FText::FromString(NewText));
+}
+
+void UInGameHUD::OnSpeedChanged(const FOnAttributeChangeData& ChangeData)
+{
+	CharacterMovementComponent->MaxWalkSpeed = ChangeData.NewValue;
 }
 
 void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
