@@ -20,7 +20,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:	
-	
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -43,4 +42,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Damage;
+	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
+	void DecreaseHP(float Value);
+protected:
+	
 };

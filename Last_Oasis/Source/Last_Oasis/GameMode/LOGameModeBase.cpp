@@ -15,7 +15,7 @@ void ALOGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
     Sun = Cast<ADirectionalLight>(UGameplayStatics::GetActorOfClass(GetWorld(), ADirectionalLight::StaticClass()));
-    ElapsedTime = (3.0f / 24.0f) * DayLength;
+    ElapsedTime = (6.0f / 24.0f) * DayLength;
 	//GetWorld()->GetTimerManager().SetTimer(TimeHandle, this, &ALOGameModeBase::UpdateGameTime, 1.0f, true);
 
     PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
