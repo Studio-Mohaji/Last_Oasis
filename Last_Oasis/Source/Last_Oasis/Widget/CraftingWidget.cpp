@@ -244,21 +244,51 @@ void UCraftingWidget::CraftingItem()
     InventoryManager->UpdateBroadCast();
 
 
-    for (int i = 0; i < InventoryManager->RecipeItems.Num(); i++)
-    {// InventoryManage의 레시피 아이템에 해당하는 아이템의 데이터 => 중요 제작 아이템
-        if (InventoryManager->RecipeItems[i].ItemData == SelectedRecipeState.RecipeItem)
+   // for (int i = 0; i < InventoryManager->RecipeItems.Num(); i++)
+   // {// InventoryManage의 레시피 아이템에 해당하는 아이템의 데이터 => 중요 제작 아이템
+   //     if (InventoryManager->RecipeItems[i].ItemData == SelectedRecipeState.RecipeItem)
+   //     {
+			//// TImer로 몇초 뒤에 알림UI & 제작창 닫기 함수 실행.
+   //         FTimerHandle CloseHandle;
+   //         GetWorld()->GetTimerManager().SetTimer(
+   //             CloseHandle, 
+   //             FTimerDelegate::CreateUObject(this, &UCraftingWidget::CloseCraftingUI, i), 
+   //             1.0f, false
+   //         );
+   //         break;
+   //     }
+   // }
+
+    for (int i = 0; i < CraftingManager->FirstStoryItemData.Num(); i++)
+    {
+        if (CraftingManager->FirstStoryItemData[i] == SelectedRecipeState.RecipeItem)
         {
-			// TImer로 몇초 뒤에 알림UI & 제작창 닫기 함수 실행.
             FTimerHandle CloseHandle;
             GetWorld()->GetTimerManager().SetTimer(
-                CloseHandle, 
-                FTimerDelegate::CreateUObject(this, &UCraftingWidget::CloseCraftingUI, i), 
+                CloseHandle,
+                FTimerDelegate::CreateUObject(this, &UCraftingWidget::CloseCraftingUI, 0),
                 1.0f, false
             );
+			CraftingManager->FirstStoryItemData.Empty();
             break;
         }
     }
 
+    for (int i = 0; i < CraftingManager->SecondStoryItemData.Num(); i++)
+    {
+        if (CraftingManager->SecondStoryItemData[i] == SelectedRecipeState.RecipeItem)
+        {
+            FTimerHandle CloseHandle;
+            GetWorld()->GetTimerManager().SetTimer(
+                CloseHandle,
+                FTimerDelegate::CreateUObject(this, &UCraftingWidget::CloseCraftingUI, 1),
+                1.0f, false
+            );
+            CraftingManager->SecondStoryItemData.Empty();
+            break;
+        }
+    }
+    
     if (SelectedRecipeState.RecipeItem == CraftingManager->WeapeonCraftingItem)
     {
 		CraftingManager->WeaponCrafting();
