@@ -19,6 +19,11 @@ void UCraftingWidget::NativeConstruct()
 
 	CraftingUIBox->SetVisibility(ESlateVisibility::Hidden);
 
+    if (InventoryManager)
+    {
+        InventoryManager->OnRecipeUpdated.AddDynamic(this, &UCraftingWidget::CraftingRecipeUpdate);
+    }
+
 	CraftingRecipeInitialize();
 
 }
@@ -64,7 +69,6 @@ void UCraftingWidget::CraftingRecipeInitialize()
             }
         }
     }
-
 }
 
 void UCraftingWidget::UpdateSelection(UCraftingRecipeList* SelectedRecipe)
@@ -107,7 +111,24 @@ void UCraftingWidget::UpdateSelection(UCraftingRecipeList* SelectedRecipe)
 // 켜고 끌때마다 업데이트
 void UCraftingWidget::CraftingRecipeUpdate()
 {
+    //for (int32 i = 0; i < CraftingManager->RecipeStates.Num(); ++i)
+    //{
+    //    const FRecipeState& RecipeState = CraftingManager->RecipeStates[i];
 
+    //    if (RecipeState.bUnlocked && RecipeListArray.IsValidIndex(i))
+    //    {
+    //        UCraftingRecipeList* TargetWidget = RecipeListArray[i];
+    //        if (TargetWidget && TargetWidget->GetVisibility() != ESlateVisibility::Visible)
+    //        {
+    //            TargetWidget->ItemData = RecipeState.RecipeItem;
+    //            TargetWidget->SetRecipeData();
+    //            TargetWidget->SetVisibility(ESlateVisibility::Visible);
+    //        }
+    //    }
+    //}
+
+
+    CraftingRecipeInitialize();
 	// 레시피 업데이트할때, ItemList도 업데이트
     CraftingItemUpdate();
 }
@@ -154,8 +175,6 @@ void UCraftingWidget::CraftingItemUpdate()
 
 void UCraftingWidget::CraftingItem()
 {
-
-    // 1. 레시피 재료 차감
     for (const FRecipeResource& Resource : SelectedRecipeState.RequiredResources)
     {
         for (FInventoryItem& InventoryItem : InventoryManager->ItemDataList)
@@ -168,7 +187,6 @@ void UCraftingWidget::CraftingItem()
         }
     }
 
-    // 2. 제작 아이템 인벤토리에 추가
     bool bFound = false;
     for (FInventoryItem& InventoryItem : InventoryManager->ItemDataList)
     {
@@ -179,8 +197,6 @@ void UCraftingWidget::CraftingItem()
             break;
         }
     }
-
-    // 인벤토리에 없으면 새로 추가
     if (!bFound)
     {
         InventoryManager->ItemDataList.Add(FInventoryItem{ SelectedRecipeState.RecipeItem, 1 });
