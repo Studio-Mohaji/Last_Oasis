@@ -43,8 +43,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetSpawnPoint(FTransform SpawnTransform);
+	UFUNCTION(BlueprintCallable)
 	void SetTimeOfDay(int32 NewHour, int32 NewMinute);
+	UFUNCTION(BlueprintCallable)
 	bool GetRemainTimeUntilMorning();
+	UFUNCTION(BlueprintCallable)
 	void AddMinute(int32 AddMinute);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
