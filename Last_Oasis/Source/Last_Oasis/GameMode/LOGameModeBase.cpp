@@ -16,11 +16,7 @@ void ALOGameModeBase::Respawn()
     APlayerController* Controller = GetWorld()->GetFirstPlayerController();
     if (Controller)
     {
-        if (!SpawnActor)
-        {
-            SpawnActor = FindPlayerStart(Controller);
-        }
-        APawn* NewPawn = SpawnDefaultPawnFor(Controller, SpawnActor);
+        APawn* NewPawn = SpawnDefaultPawnAtTransform(Controller, SpawnPoint);
         if (NewPawn)
         {
             Controller->Possess(NewPawn);
@@ -28,13 +24,10 @@ void ALOGameModeBase::Respawn()
     }
 }
 
-void ALOGameModeBase::SetSpawnPoint()
+void ALOGameModeBase::SetSpawnPoint(FTransform SpawnTransform)
 {
-    APlayerController* Controller = GetWorld()->GetFirstPlayerController();
-    if (Controller)
-    {
-        SpawnPoint = Controller->GetPawn()->GetActorLocation();
-    }
+    SpawnPoint = SpawnTransform;
+    SpawnPoint += FTransform(FVector(200,0,0));
 }
 
 void ALOGameModeBase::BeginPlay()
@@ -45,7 +38,7 @@ void ALOGameModeBase::BeginPlay()
 	//GetWorld()->GetTimerManager().SetTimer(TimeHandle, this, &ALOGameModeBase::UpdateGameTime, 1.0f, true);
 
     PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-
+        
 	SpawnBuilding();
 }
 
@@ -166,14 +159,21 @@ void ALOGameModeBase::SpawnBuilding()
         bFoundValid = true;
     }
 
-    GetWorld()->SpawnActor<AActor>(BuildingA, LocationA, FRotator::ZeroRotator);
+    AActor *a = GetWorld()->SpawnActor<AActor>(BuildingA, LocationA, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<AActor>(BuildingB, LocationB, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<AActor>(BuildingC, LocationC, FRotator::ZeroRotator);
-
-    if (PC->HUD)
+    SpawnPoint = a->GetActorTransform();
+    SpawnPoint += FTransform(FVector(0,-1000,0));
+    APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+    if (Controller)
     {
-        PC->HUD->SetBuildings(PC->GetPawn<APlayerCharacter>(), LocationA, LocationB, LocationC);
-	}
+        Controller->GetPawn()->SetActorTransform(SpawnPoint);
+    }
+    
+ //    if (PC->HUD)
+ //    {
+ //        PC->HUD->SetBuildings(PC->GetPawn<APlayerCharacter>(), LocationA, LocationB, LocationC);
+	// }
 }
 
 void ALOGameModeBase::UpdateGameTime()
@@ -192,6 +192,5 @@ void ALOGameModeBase::UpdateGameTime()
     {
         UE_LOG(LogTemp, Log, TEXT("현재 게임 시각: %02d:%02d"), Hour, Minute);
     }
-
 }
 
