@@ -312,10 +312,11 @@ void APlayerCharacter::InputPressed(int32 InputID)
         }
     }
 
-    if (InputID == 1 && ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.NearTent")))
+    if ((InputID == 1 || InputID == 6) && ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag("State.NearTent")))
     {
         Cast<ALOGameModeBase>(GetWorld()->GetAuthGameMode())->SetSpawnPoint(TentTransform);
     }
+
 }
 
 void APlayerCharacter::InputReleased(int32 InputID)
@@ -499,7 +500,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
     EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::InputPressed, 1);
 
-    EnhancedInputComponent->BindAction(Interaction, ETriggerEvent::Started, this, &APlayerCharacter::InteractionFuction);
+    EnhancedInputComponent->BindAction(Interaction, ETriggerEvent::Triggered, this, &APlayerCharacter::InputPressed, 6);
     EnhancedInputComponent->BindAction(ToggleCraft, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleCraftFunction);
     EnhancedInputComponent->BindAction(ToggleInventory, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleInventoryFunction);
     EnhancedInputComponent->BindAction(ToggleMission, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleMissionFunction);
