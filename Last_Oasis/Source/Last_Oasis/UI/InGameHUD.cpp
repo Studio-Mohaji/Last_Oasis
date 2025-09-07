@@ -41,6 +41,35 @@ void UInGameHUD::NativeConstruct()
 	UpdateProgress(TemperatureMID, 0.5f);
 
 	SetGoalText(0);
+
+	Raider->SetVisibility(ESlateVisibility::Hidden);
+	LaboA->SetVisibility(ESlateVisibility::Hidden);
+	LaboB->SetVisibility(ESlateVisibility::Hidden);
+	Oasis->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UInGameHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+	
+	if (!Player) return;
+
+	float PlayerYaw = Player->GetActorRotation().Yaw;
+
+	if (CurrentPhase == 1)
+	{
+		float AngleA = GetAngleToTarget(Player->GetActorLocation(), LaboALoc, PlayerYaw);
+		ApplyMarkerRotation(LaboA, AngleA);
+
+		float AngleB = GetAngleToTarget(Player->GetActorLocation(), LaboBLoc, PlayerYaw);
+		ApplyMarkerRotation(LaboB, AngleB);
+	}
+
+	if (CurrentPhase == 3)
+	{
+		float AngleC = GetAngleToTarget(Player->GetActorLocation(), OasisLoc, PlayerYaw);
+		ApplyMarkerRotation(Oasis, AngleC);
+	}
 }
 
 void UInGameHUD::SetAbilitySystemComponent()
@@ -207,4 +236,54 @@ void UInGameHUD::SetGoalText(int32 Phase)
 {
 	GoalBarText->SetText(FText::FromString(GoalBarTexts[Phase]));
 	GoalText->SetText(FText::FromString(GoalTexts[Phase]));
+
+	CurrentPhase = Phase;
+
+	if (Phase == 1)
+	{
+		Raider->SetVisibility(ESlateVisibility::Visible);
+		LaboA->SetVisibility(ESlateVisibility::Visible);
+		LaboB->SetVisibility(ESlateVisibility::Visible);
+	}
+	else if (Phase == 3)
+	{
+		Oasis->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UInGameHUD::SetBuildings(APlayerCharacter* Ch, FVector LaboAPos, FVector LaboBPos, FVector OasisPos)
+{
+	if (!Ch || !Ch->GetController()) return;
+
+	Player = Ch;
+	LaboALoc = LaboAPos;
+	LaboBLoc = LaboBPos;
+	OasisLoc = OasisPos;
+}
+
+float UInGameHUD::GetAngleToTarget(const FVector& PlayerLoc, const FVector& TargetLoc, float PlayerYaw)
+{
+	FVector Dir = (TargetLoc - PlayerLoc).GetSafeNormal2D();
+	FRotator Rot = Dir.Rotation();
+
+	float Yaw = Rot.Yaw;
+
+	if (Yaw < 0)
+		Yaw += 360.0f;
+
+	float Corrected = Yaw - PlayerYaw;
+
+	if (Corrected < 0)
+		Corrected += 360.0f;
+
+	return Corrected;
+}
+
+void UInGameHUD::ApplyMarkerRotation(UImage* Marker, float Angle)
+{
+	if (!Marker) return;
+
+	FWidgetTransform Transform = Marker->RenderTransform;
+	Transform.Angle = Angle;
+	Marker->SetRenderTransform(Transform);
 }

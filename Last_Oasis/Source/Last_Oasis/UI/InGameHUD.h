@@ -11,6 +11,7 @@
 #include "Components/TextBlock.h"
 #include "Widget/InventoryWidget.h"
 #include "Widget/CraftingWidget.h"
+#include "Character/PlayerCharacter.h"
 #include "InGameHUD.generated.h"
 
 UCLASS()
@@ -24,6 +25,7 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
 	void OnThirstChanged(const FOnAttributeChangeData& ChangeData);
@@ -78,6 +80,15 @@ protected:
 	TObjectPtr<class UImage> Raider;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UImage> LaboA;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UImage> LaboB;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
+	TObjectPtr<class UImage> Oasis;
+
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
 	TObjectPtr<class UBorder> Goal;
 
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = true, BindWidget))
@@ -109,6 +120,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FString> GoalBarTexts;
+
+	APlayerCharacter* Player;	
+
+	FVector LaboALoc;
+	FVector LaboBLoc;
+	FVector OasisLoc;
+
+	int32 CurrentPhase = 0;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
@@ -144,4 +163,10 @@ public:
 	TObjectPtr<UBorder> TargetBorder;
 
 	void UpdateBorderPosition();
+
+	void SetBuildings(APlayerCharacter* Ch, FVector LaboAPos, FVector LaboBPos, FVector OasisPos);
+
+	float GetAngleToTarget(const FVector& PlayerLoc, const FVector& TargetLoc, float PlayerYaw);
+
+	void ApplyMarkerRotation(UImage* Marker, float Angle);
 };

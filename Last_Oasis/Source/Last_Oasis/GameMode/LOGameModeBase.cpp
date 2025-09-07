@@ -141,6 +141,11 @@ void ALOGameModeBase::SpawnBuilding()
     GetWorld()->SpawnActor<AActor>(BuildingA, LocationA, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<AActor>(BuildingB, LocationB, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<AActor>(BuildingC, LocationC, FRotator::ZeroRotator);
+
+    if (PC->HUD)
+    {
+        PC->HUD->SetBuildings(PC->GetPawn<APlayerCharacter>(), LocationA, LocationB, LocationC);
+	}
 }
 
 void ALOGameModeBase::UpdateGameTime()
