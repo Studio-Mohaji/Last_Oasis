@@ -39,13 +39,10 @@ public:
 	void Respawn();
 
 	UFUNCTION(BlueprintCallable)
-	void SetSpawnPoint();
-
+	void SetSpawnPoint(FTransform SpawnTransform);
+		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<AActor> SpawnActor;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector SpawnPoint;
+	FTransform SpawnPoint;
 	
 protected:
 	virtual void BeginPlay() override;
