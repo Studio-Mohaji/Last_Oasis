@@ -40,4 +40,3 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	UDataAssetBase* WeapeonCraftingItem;
 };
-S
