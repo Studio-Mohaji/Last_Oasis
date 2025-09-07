@@ -164,7 +164,21 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
     if (Minute != LastPrintedMinute)
     {
         LastPrintedMinute = Minute;
-		
+
+        if (Minute == 0)
+        {
+            if (!SandStorm)
+            {
+                if (FMath::FRand() < 0.02f)
+                {
+                    
+                }
+            }
+            else
+            {
+                
+            }
+        }
         if(PC->HUD)
         {
             PC->HUD->UpdateTime(Hour, Minute);
@@ -308,10 +322,10 @@ void ALOGameModeBase::SpawnFarm()
                 RandomLoc,
                 bHit ? Hit.Location : FVector(RandomLoc.X, RandomLoc.Y, RandomLoc.Z - 5000.0f),
                 LineColor,
-                false,       // Áö¼Ó ½Ã°£
-                5.0f,        // ¶óÀÎ Áö¼Ó ½Ã°£ 5ÃÊ
-                0,           // ±íÀÌ ¿ì¼± ¼øÀ§
-                5.0f         // µÎ²²
+                false,       // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
+                5.0f,        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ 5ï¿½ï¿½
+                0,           // ï¿½ï¿½ï¿½ï¿½ ï¿½ì¼± ï¿½ï¿½ï¿½ï¿½
+                5.0f         // ï¿½Î²ï¿½
             );
 
             if (bHit)

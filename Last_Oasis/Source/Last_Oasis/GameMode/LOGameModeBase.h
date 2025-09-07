@@ -15,6 +15,7 @@ public:
 	ALOGameModeBase();
 	UPROPERTY()
 	TArray<AActor*> SpawnedBuildings;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DayNight")
 	float DayLength = 1200.0f;
 
@@ -30,6 +31,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="DayNight")
 	float CurrentHour = 6.0f;
 
+	bool SandStorm
 	// UFUNCTION(BlueprintCallable, Category="DayNight")
 	// bool IsDaytime() const;
 	//
@@ -106,8 +108,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	FVector BoxExtent;
-
-public:
-	UPROPERTY()
-	TArray<AActor*> SpawnedBuildings;
 };
