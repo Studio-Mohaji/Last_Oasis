@@ -25,3 +25,8 @@ void ACraftingManager::Tick(float DeltaTime)
 
 }
 
+void ACraftingManager::StoryItemCraftingEvent(int32 index)
+{
+	OnCraftingEvent.Broadcast(index);
+}
+

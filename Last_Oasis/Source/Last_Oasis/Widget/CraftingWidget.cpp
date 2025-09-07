@@ -11,6 +11,8 @@ void UCraftingWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+    if (!GetWorld() || !GetWorld()->IsGameWorld())
+        return;
 	CraftingManager = Cast<ACraftingManager>(
 		UGameplayStatics::GetActorOfClass(GetWorld(), ACraftingManager::StaticClass()));
 
@@ -47,7 +49,7 @@ void UCraftingWidget::CraftingRecipeInitialize()
     const int32 RecipeCount = CraftingManager->RecipeStates.Num();
 
     // 해금
-    for (int32 i = 0; i < RecipeCount; ++i)
+    for (int32 i = 0; i < RecipeCount; ++i) //41
     {
         if (CraftingManager->RecipeStates[i].bUnlocked) // bUnlocked : true
         {
@@ -239,23 +241,35 @@ void UCraftingWidget::CraftingItem()
         InventoryManager->ItemDataList.Add(FInventoryItem{ SelectedRecipeState.RecipeItem, 1 });
     }
 
-
-
-
-	//// 제작한 아이템의 재료 개수만큼 인벤토리에서 차감
- //   if(InventoryManager->ItemDataList[0].ItemData == SelectedRecipeState.RequiredResources[0].Resource)
- //       InventoryManager->ItemDataList[0].CurrentCount -= SelectedRecipeState.RequiredResources[0].NeedCount;
-
-	//// 제작한 아이템 인벤토리에 추가
-
-	//// 아이템이 없을 경우 새로 추가
-	//InventoryManager->ItemDataList.Add(FInventoryItem{ SelectedRecipeState.RecipeItem, 1 });
-	//// 기존에 아이템이 있을 경우 인벤토리의 FInventoryItem CurrentCount 증가
-	//InventoryManager->TestItemData[i].CurrentCount += 1;
-
     // 인벤토리 업데이트
     InventoryManager->UpdateBroadCast();
 
+
+    for (int i = 0; i < InventoryManager->RecipeItems.Num(); i++)
+    {
+        // InventoryManage의 레시피 아이템에 해당하는 아이템의 데이터 => 중요 제작 아이템
+        if (InventoryManager->RecipeItems[i].ItemData == SelectedRecipeState.RecipeItem)
+        {
+            
+			// TImer로 몇초 뒤에 알림UI & 제작창 닫기 함수 실행.
+            CloseCraftingUI(i);
+
+
+
+        }
+    }
+
 	// 제작창 업데이트
     CraftingItemUpdate();
+}
+
+void UCraftingWidget::CloseCraftingUI(int32 index)
+{
+    CraftingManager->StoryItemCraftingEvent(index);
+
+    //숨기기
+    if (CraftingUIBox->GetVisibility() == ESlateVisibility::Visible)
+    {
+        CraftingUIBox->SetVisibility(ESlateVisibility::Hidden);
+    }
 }
