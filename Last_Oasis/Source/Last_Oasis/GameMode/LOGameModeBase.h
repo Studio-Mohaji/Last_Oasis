@@ -43,6 +43,13 @@ public:
 		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTransform SpawnPoint;
+
+	UFUNCTION(BlueprintCallable)
+	void SetTimeOfDay(int32 NewHour, int32 NewMinute);
+	UFUNCTION(BlueprintCallable)
+	bool GetRemainTimeUntilMorning();
+	UFUNCTION(BlueprintCallable)
+	void AddMinute(int32 Minute);
 	
 protected:
 	virtual void BeginPlay() override;

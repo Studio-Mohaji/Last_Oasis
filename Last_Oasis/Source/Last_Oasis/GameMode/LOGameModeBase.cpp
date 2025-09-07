@@ -23,6 +23,7 @@ void ALOGameModeBase::Respawn()
         if (NewPawn)
         {
             Controller->Possess(NewPawn);
+            AddMinute(360);
         }
     }
 }
@@ -32,6 +33,95 @@ void ALOGameModeBase::Respawn()
     SpawnPoint = SpawnTransform;
     SpawnPoint += FTransform(FVector(0,-500,0));
     SpawnPoint.SetScale3D(FVector(1,1,1));
+}
+
+void ALOGameModeBase::SetTimeOfDay(int32 NewHour, int32 NewMinute)
+{
+    NewHour = FMath::Clamp(NewHour, 0, 23);
+    NewMinute = FMath::Clamp(NewMinute, 0, 59);
+
+    float TargetHour = NewHour + (NewMinute / 60.0f);
+
+    float CurrentHourNow = (ElapsedTime / DayLength) * 24.0f;
+
+    if (CurrentHourNow < 12.0f && TargetHour >= 0.0f)
+    {
+        Days++;
+        if (PC && PC->HUD)
+        {
+            PC->HUD->UpdateDays(Days);
+        }
+    }
+
+    ElapsedTime = (TargetHour / 24.0f) * DayLength;
+
+    CurrentHour = TargetHour;
+
+    if (Sun)
+    {
+        float Pitch = (CurrentHour / 24.0f) * 360.0f - 90.0f;
+        FRotator NewRotation(-Pitch, -90.0f, 0.0f);
+        Sun->SetActorRotation(NewRotation);
+    }
+
+    if (PC && PC->HUD)
+    {
+        PC->HUD->UpdateTime(NewHour, NewMinute);
+    }
+}
+
+bool ALOGameModeBase::GetRemainTimeUntilMorning()
+{
+    float NextMorning = 6.0f;
+    float TimeLeft;
+
+    if (CurrentHour < NextMorning)
+    {
+        TimeLeft = NextMorning - CurrentHour;
+    }
+    else
+    {
+        TimeLeft = 24.0f - CurrentHour + NextMorning;
+    }
+    return TimeLeft >= 5.0f;
+}
+
+void ALOGameModeBase::AddMinute(int32 AddMinute)
+{
+    if (AddMinute <= 0) return;
+
+    float HoursToAdd = AddMinute / 60.0f;
+
+    float TimeToAdd = (HoursToAdd / 24.0f) * DayLength;
+
+    ElapsedTime += TimeToAdd;
+
+    if (ElapsedTime > DayLength)
+    {
+        ElapsedTime -= DayLength;
+        Days++;
+
+        if (PC && PC->HUD)
+        {
+            PC->HUD->UpdateDays(Days);
+        }
+    }
+
+    CurrentHour = (ElapsedTime / DayLength) * 24.0f;
+    int32 Hour = FMath::FloorToInt(CurrentHour);
+    int32 Minute = FMath::FloorToInt((CurrentHour - Hour) * 60.0f);
+
+    if (Sun)
+    {
+        float Pitch = (CurrentHour / 24.0f) * 360.0f - 90.0f;
+        FRotator NewRotation(-Pitch, -90.0f, 0.0f);
+        Sun->SetActorRotation(NewRotation);
+    }
+
+    if (PC && PC->HUD)
+    {
+        PC->HUD->UpdateTime(Hour, Minute);
+    }
 }
 
 void ALOGameModeBase::BeginPlay()

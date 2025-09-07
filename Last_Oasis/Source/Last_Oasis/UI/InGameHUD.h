@@ -29,7 +29,7 @@ public:
 	void ShowToastMsg(const FString& InText);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void Fade();
+	void Fade(float Speed = 1);
 
 protected:
 	virtual void NativeConstruct() override;
