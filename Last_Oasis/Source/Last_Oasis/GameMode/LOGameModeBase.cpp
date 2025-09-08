@@ -130,7 +130,7 @@ void ALOGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
     Sun = Cast<ADirectionalLight>(UGameplayStatics::GetActorOfClass(GetWorld(), ADirectionalLight::StaticClass()));
-    ElapsedTime = (6.05f / 24.0f) * DayLength;
+    ElapsedTime = (6.f / 24.0f) * DayLength;
 	//GetWorld()->GetTimerManager().SetTimer(TimeHandle, this, &ALOGameModeBase::UpdateGameTime, 1.0f, true);
 
     PC = Cast<ALOPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
@@ -166,11 +166,11 @@ void ALOGameModeBase::Tick(float DeltaSeconds)
     {
         LastPrintedMinute = Minute;
 
-        if (Minute == 0)
+        if (Minute == 0 && Days > 4)
         {
             if (!SandStorm)
             {
-                if (FMath::FRand() < 0.95f)
+                if (FMath::FRand() < 0.05f)
                 {
                     APlayerController* Controller = GetWorld()->GetFirstPlayerController();
                     if (Controller)

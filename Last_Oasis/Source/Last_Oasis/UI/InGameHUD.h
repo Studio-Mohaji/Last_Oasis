@@ -32,6 +32,9 @@ public:
 	void Fade(float Speed = 1);
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> TentClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> FireClass;
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
