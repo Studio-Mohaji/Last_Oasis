@@ -32,7 +32,6 @@ public:
 	void Fade(float Speed = 1);
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> TentClass;
-
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> FireClass;
 protected:
@@ -127,6 +126,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<class UInventoryWidget> InventoryWidgetClass;
 
+
 	UTexture2D* SunTexture;
 	UTexture2D* MoonTexture;
 
@@ -188,4 +188,8 @@ public:
 	float GetAngleToTarget(const FVector& TargetLoc);
 
 	void ApplyMarkerRotation(UImage* Marker, float Angle);
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TObjectPtr<class UWidget> TempWidget;
 };
