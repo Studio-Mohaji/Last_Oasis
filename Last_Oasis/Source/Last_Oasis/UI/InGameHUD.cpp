@@ -169,6 +169,11 @@ void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
 						{
 							a->Destroy();
 						}
+						UGameplayStatics::GetAllActorsOfClass(GetWorld(), FireClass,Tents);
+						for (auto a : Tents)
+						{
+							a->Destroy();
+						}
 					}
 				}
 				else
