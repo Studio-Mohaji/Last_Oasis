@@ -23,6 +23,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
 #include "UI/InGameHUD.h"
+#include "Enemys/EnemyAnim.h"
+
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -195,7 +197,14 @@ void APlayerCharacter::BeginPlay()
     GetWorld()->GetTimerManager().SetTimer(
         SpawnTimerHandle,
         this,
-        &APlayerCharacter::SpawnActorAround,
+        &APlayerCharacter::SpawnActorAround1,
+        SpawnInterval,
+        true
+    );
+    GetWorld()->GetTimerManager().SetTimer(
+        SpawnTimerHandle,
+        this,
+        &APlayerCharacter::SpawnActorAround2,
         SpawnInterval,
         true
     );
@@ -498,17 +507,19 @@ void APlayerCharacter::ToggleMissionFunction()
     LOPC->HUD->OpenGoal();
 }
 
-void APlayerCharacter::SpawnActorAround()
+void APlayerCharacter::SpawnActorAround1()
 {
     if (!Enemy1 && !Enemy2) return;
 
-    TSubclassOf<AActor> SelectedClass = (FMath::RandBool() && Enemy1) ? Enemy1 : Enemy2;
+	if (CurEnemyNum >= MaxEnemyNum) return;
+
+    TSubclassOf<AActor> SelectedClass = Enemy1;
 
     FVector Origin = GetActorLocation();
     FVector RandomOffset = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(MinRadius, MaxRadius);
     FVector SpawnLoc = Origin + RandomOffset + FVector(0, 0, SpawnHeight);
 
-    // 라인 트레이스로 지면 찾기
+
     FHitResult Hit;
     FCollisionQueryParams Params;
     Params.AddIgnoredActor(this);
@@ -520,16 +531,46 @@ void APlayerCharacter::SpawnActorAround()
         Params
     );
 
-    // 디버그 라인
-    DrawDebugLine(
-        GetWorld(),
+    if (bHit)
+    {
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+        AEnemyCh* Enemy = Cast<AEnemyCh>(GetWorld()->SpawnActor<AActor>(SelectedClass, Hit.Location, FRotator::ZeroRotator, SpawnParams));
+
+        if (AAIController* AICont = Cast<AAIController>(GetController()))
+        {
+            if (BehaviorTree1)
+            {
+                AICont->RunBehaviorTree(BehaviorTree1);
+            }
+        }
+		CurEnemyNum++;
+    }
+}
+
+void APlayerCharacter::SpawnActorAround2()
+{
+    if (!Enemy1 && !Enemy2) return;
+
+    if (CurEnemyNum >= MaxEnemyNum) return;
+
+    TSubclassOf<AActor> SelectedClass = Enemy2;
+
+    FVector Origin = GetActorLocation();
+    FVector RandomOffset = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(MinRadius, MaxRadius);
+    FVector SpawnLoc = Origin + RandomOffset + FVector(0, 0, SpawnHeight);
+
+
+    FHitResult Hit;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+    bool bHit = GetWorld()->LineTraceSingleByChannel(
+        Hit,
         SpawnLoc,
-        bHit ? Hit.Location : FVector(SpawnLoc.X, SpawnLoc.Y, SpawnLoc.Z - 20000.0f),
-        bHit ? FColor::Green : FColor::Red,
-        false,
-        5.0f,
-        0,
-        5.0f
+        FVector(SpawnLoc.X, SpawnLoc.Y, SpawnLoc.Z - 20000.0f),
+        ECC_WorldStatic,
+        Params
     );
 
     if (bHit)
@@ -537,7 +578,16 @@ void APlayerCharacter::SpawnActorAround()
         FActorSpawnParameters SpawnParams;
         SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-        GetWorld()->SpawnActor<AActor>(SelectedClass, Hit.Location, FRotator::ZeroRotator, SpawnParams);
+        AEnemyCh* Enemy = Cast<AEnemyCh>(GetWorld()->SpawnActor<AActor>(SelectedClass, Hit.Location + FVector(0, 0, 100), FRotator::ZeroRotator, SpawnParams));
+
+        if (AAIController* AICont = Cast<AAIController>(GetController()))
+        {
+            if (BehaviorTree2)
+            {
+                AICont->RunBehaviorTree(BehaviorTree2);
+            }
+        }
+        CurEnemyNum++;
     }
 }
 

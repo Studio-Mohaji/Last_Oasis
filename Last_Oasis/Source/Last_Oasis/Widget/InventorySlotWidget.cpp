@@ -16,7 +16,6 @@ void UInventorySlotWidget::NativeConstruct()
 
 FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Move"));
 
 	if (InfoWidget && InfoWidget->GetVisibility() == ESlateVisibility::Visible)
 	{
@@ -32,8 +31,6 @@ FReply UInventorySlotWidget::NativeOnMouseMove(const FGeometry& InGeometry, cons
 void UInventorySlotWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
-
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Enter"));
 
 	if (!ItemImage || ItemImage->GetVisibility() == ESlateVisibility::Hidden)
 		return;
@@ -60,7 +57,6 @@ void UInventorySlotWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const
 
 void UInventorySlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Leave"));
 	Super::NativeOnMouseLeave(InMouseEvent);
 
 	if (LastHoveredSlot != this) return;
@@ -73,12 +69,10 @@ void UInventorySlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 
 FReply UInventorySlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Slot Clicked?"));
 
 	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton &&
 		ItemData->IsUsable)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Slot Clicked!"));
 		OnSlotClicked.Broadcast(this);
 		SetSlotData();
 		return FReply::Handled();
