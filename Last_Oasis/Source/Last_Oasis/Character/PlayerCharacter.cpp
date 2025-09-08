@@ -194,7 +194,7 @@ void APlayerCharacter::BeginPlay()
         }
     }
 
-    GetWorld()->GetTimerManager().SetTimer(
+    /*GetWorld()->GetTimerManager().SetTimer(
         SpawnTimerHandle,
         this,
         &APlayerCharacter::SpawnActorAround1,
@@ -207,7 +207,7 @@ void APlayerCharacter::BeginPlay()
         &APlayerCharacter::SpawnActorAround2,
         SpawnInterval,
         true
-    );
+    );*/
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
