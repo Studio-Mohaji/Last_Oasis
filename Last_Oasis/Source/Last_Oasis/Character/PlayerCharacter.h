@@ -6,6 +6,10 @@
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "Player/LOPlayerController.h"
+#include "AIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 #include "../Widget/CraftingWidget.h"
 #include "../Widget/InventoryWidget.h"
@@ -163,4 +167,43 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<class UBoxComponent> WeaponRange3;
+
+
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AActor> Enemy1;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AActor> Enemy2;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float MinRadius = 3000.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float MaxRadius = 4000.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float SpawnInterval = 10.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float SpawnHeight = 400.0f;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int32 MaxEnemyNum = 20;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int32 CurEnemyNum = 0;
+
+	FTimerHandle SpawnTimerHandle;
+
+	UFUNCTION()
+	void SpawnActorAround1();
+	void SpawnActorAround2();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	UBehaviorTree* BehaviorTree1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	UBehaviorTree* BehaviorTree2;
 };

@@ -20,7 +20,11 @@
 #include "Components/BoxComponent.h"
 #include "Enemys/EnemyCh.h"
 #include "GameMode/LOGameModeBase.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "DrawDebugHelpers.h"
 #include "UI/InGameHUD.h"
+#include "Enemys/EnemyAnim.h"
+
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -170,6 +174,40 @@ APlayerCharacter::APlayerCharacter()
     WeaponRange2->SetupAttachment(GetMesh());
     WeaponRange3->SetupAttachment(GetMesh());
     
+}
+
+void APlayerCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    LOPC = Cast<ALOPlayerController>(GetController());
+
+    if (LOPC)
+    {
+        if (LOPC->HUD)
+        {
+            InitWidgetsFromHUD();
+        }
+        else
+        {
+            LOPC->OnHUDInitialized.AddDynamic(this, &APlayerCharacter::InitWidgetsFromHUD);
+        }
+    }
+
+    GetWorld()->GetTimerManager().SetTimer(
+        SpawnTimerHandle,
+        this,
+        &APlayerCharacter::SpawnActorAround1,
+        SpawnInterval,
+        true
+    );
+    GetWorld()->GetTimerManager().SetTimer(
+        SpawnTimerHandle,
+        this,
+        &APlayerCharacter::SpawnActorAround2,
+        SpawnInterval,
+        true
+    );
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
@@ -397,25 +435,6 @@ void APlayerCharacter::InteractionFuction(const FInputActionValue& Value)
 	// InventoryManager->GetItem( Item Data );
 }
 
-void APlayerCharacter::BeginPlay()
-{
-    Super::BeginPlay();
-
-    LOPC = Cast<ALOPlayerController>(GetController());
-
-    if (LOPC)
-    {
-        if (LOPC->HUD)
-        {
-            InitWidgetsFromHUD();
-        }
-        else
-        {
-            LOPC->OnHUDInitialized.AddDynamic(this, &APlayerCharacter::InitWidgetsFromHUD);
-        }
-    }
-}
-
 void APlayerCharacter::InitWidgetsFromHUD()
 {
     if (!LOPC || !LOPC->HUD) return;
@@ -482,6 +501,90 @@ void APlayerCharacter::EndHitCheck()
 void APlayerCharacter::ToggleMissionFunction()
 {
     LOPC->HUD->OpenGoal();
+}
+
+void APlayerCharacter::SpawnActorAround1()
+{
+    if (!Enemy1 && !Enemy2) return;
+
+	if (CurEnemyNum >= MaxEnemyNum) return;
+
+    TSubclassOf<AActor> SelectedClass = Enemy1;
+
+    FVector Origin = GetActorLocation();
+    FVector RandomOffset = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(MinRadius, MaxRadius);
+    FVector SpawnLoc = Origin + RandomOffset + FVector(0, 0, SpawnHeight);
+
+
+    FHitResult Hit;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+    bool bHit = GetWorld()->LineTraceSingleByChannel(
+        Hit,
+        SpawnLoc,
+        FVector(SpawnLoc.X, SpawnLoc.Y, SpawnLoc.Z - 20000.0f),
+        ECC_WorldStatic,
+        Params
+    );
+
+    if (bHit)
+    {
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+        AEnemyCh* Enemy = Cast<AEnemyCh>(GetWorld()->SpawnActor<AActor>(SelectedClass, Hit.Location, FRotator::ZeroRotator, SpawnParams));
+
+        if (AAIController* AICont = Cast<AAIController>(GetController()))
+        {
+            if (BehaviorTree1)
+            {
+                AICont->RunBehaviorTree(BehaviorTree1);
+            }
+        }
+		CurEnemyNum++;
+    }
+}
+
+void APlayerCharacter::SpawnActorAround2()
+{
+    if (!Enemy1 && !Enemy2) return;
+
+    if (CurEnemyNum >= MaxEnemyNum) return;
+
+    TSubclassOf<AActor> SelectedClass = Enemy2;
+
+    FVector Origin = GetActorLocation();
+    FVector RandomOffset = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(MinRadius, MaxRadius);
+    FVector SpawnLoc = Origin + RandomOffset + FVector(0, 0, SpawnHeight);
+
+
+    FHitResult Hit;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+    bool bHit = GetWorld()->LineTraceSingleByChannel(
+        Hit,
+        SpawnLoc,
+        FVector(SpawnLoc.X, SpawnLoc.Y, SpawnLoc.Z - 20000.0f),
+        ECC_WorldStatic,
+        Params
+    );
+
+    if (bHit)
+    {
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+        AEnemyCh* Enemy = Cast<AEnemyCh>(GetWorld()->SpawnActor<AActor>(SelectedClass, Hit.Location + FVector(0, 0, 100), FRotator::ZeroRotator, SpawnParams));
+
+        if (AAIController* AICont = Cast<AAIController>(GetController()))
+        {
+            if (BehaviorTree2)
+            {
+                AICont->RunBehaviorTree(BehaviorTree2);
+            }
+        }
+        CurEnemyNum++;
+    }
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

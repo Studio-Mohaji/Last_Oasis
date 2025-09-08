@@ -8,7 +8,7 @@ public class Last_Oasis : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		PublicIncludePaths.AddRange(new string[] { "Last_Oasis" });
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "CinematicCamera" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "CinematicCamera", "AIModule" });
 		PrivateDependencyModuleNames.AddRange(new string[] {"GameFeatures", "GameplayAbilities", "GameplayTasks","GameplayTags"});
 
 	}
