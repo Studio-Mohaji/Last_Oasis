@@ -427,6 +427,8 @@ void APlayerCharacter::InitWidgetsFromHUD()
     InventoryWidget = LOPC->HUD->GetInventoryWidget();
     CraftingWidget = LOPC->HUD->GetCraftingWidget();
 
+    TempAWidget = LOPC->HUD->TempWidget;
+
     if (!CraftingWidget || !InventoryWidget)
     {
         FTimerHandle RetryHandle;
@@ -446,6 +448,7 @@ void APlayerCharacter::InitWidgetsFromHUD()
     if (InventoryManager)
         InventoryItems = InventoryManager->ItemDataList;
 }
+
 
 void APlayerCharacter::SetWeaponRange(int32 Value)
 {
@@ -505,6 +508,20 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     EnhancedInputComponent->BindAction(ToggleInventory, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleInventoryFunction);
     EnhancedInputComponent->BindAction(ToggleMission, ETriggerEvent::Triggered, this, &APlayerCharacter::ToggleMissionFunction);
 
+    
 }
 
 
+void APlayerCharacter::SettingWidget()
+{
+    UE_LOG(LogTemp, Warning, TEXT("TempAWidget"));
+    if (TempAWidget->IsVisible())
+    {
+        TempAWidget->SetVisibility(ESlateVisibility::Hidden);
+    }
+    else 
+    {
+        TempAWidget->SetVisibility(ESlateVisibility::Visible);
+    }
+
+}

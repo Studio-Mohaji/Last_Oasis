@@ -97,6 +97,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> ToggleMission;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> ToggleESC;
 private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -139,6 +141,10 @@ public:
 	TArray<FInventoryItem> InventoryItems;
 
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UWidget> TempAWidget;
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetWeaponRange(int32 Value);
@@ -149,6 +155,8 @@ public:
 	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
 	void GetWeapon();
 	void InitWidgetsFromHUD();
+
+	void SettingWidget();
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
