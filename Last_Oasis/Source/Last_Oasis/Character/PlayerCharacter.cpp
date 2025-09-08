@@ -247,8 +247,6 @@ void APlayerCharacter::PossessedBy(AController* NewController)
             StartSpec.InputID = StartInputAbilitie.Key;
             ASC->GiveAbility(StartSpec);
         }
-        ALOPlayerController* PlayerController = CastChecked<ALOPlayerController>(NewController);
-        PlayerController->ConsoleCommand(TEXT("Showdebug Abilitysystem"));
         StartReduceStat();
     }
 }
