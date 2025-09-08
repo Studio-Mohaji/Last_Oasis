@@ -41,17 +41,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
 	UDataAssetBase* WeapeonCraftingItem;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crafting")
+	UDataAssetBase* DustMaskCraftingItem;
+
 	UFUNCTION(BlueprintCallable, Category = "Crafting")
 	void WeaponCrafting();
 
+	UFUNCTION(BlueprintCallable, Category = "Crafting")
+	void DuskMaskCrafting();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Usable")
+	UPROPERTY(EditDefaultsOnly, Category = "Story")
 	TArray<UDataAssetBase*> FirstStoryItemData;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Usable")
+	UPROPERTY(EditDefaultsOnly, Category = "Story")
+
 	TArray<UDataAssetBase*> SecondStoryItemData;
 
-
+	UPROPERTY(EditDefaultsOnly, Category = "Story")
+	UDataAssetBase* SecondStoryCheckData;
 
 
 	APlayerController* PC;
