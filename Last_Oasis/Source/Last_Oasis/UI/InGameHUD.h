@@ -30,7 +30,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void Fade(float Speed = 1);
-
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> TentClass;
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
@@ -40,7 +41,7 @@ protected:
 	void OnHungerChanged(const FOnAttributeChangeData& ChangeData);	
 	void OnTemperatureChanged(const FOnAttributeChangeData& ChangeData);
 	void OnSpeedChanged(const FOnAttributeChangeData& ChangeData);
-
+	
 	UPROPERTY()
 	TObjectPtr<class UCharacterMovementComponent> CharacterMovementComponent;
 protected:

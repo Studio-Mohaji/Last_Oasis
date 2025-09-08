@@ -11,6 +11,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Data/GoalDataAsset.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void UInGameHUD::NativeConstruct()
 {
@@ -162,6 +163,12 @@ void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
 						ASC->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Night"));
 						ASC->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("Game.Day"));
 						Day_Night->SetBrushFromTexture(SunTexture);
+						TArray<AActor*>Tents;
+						UGameplayStatics::GetAllActorsOfClass(GetWorld(), TentClass,Tents);
+						for (auto a : Tents)
+						{
+							a->Destroy();
+						}
 					}
 				}
 				else
