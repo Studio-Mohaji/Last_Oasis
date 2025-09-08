@@ -80,7 +80,7 @@ void UInGameHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 void UInGameHUD::SetAbilitySystemComponent()
 {
 	ASC = Cast<IAbilitySystemInterface>(GetOwningPlayer()->GetPawn())->GetAbilitySystemComponent();
-	if (ASC)
+	if (IsValid(ASC))
 	{
 		UE_LOG(LogTemp,Log,TEXT("BindingDelegate"));
 
@@ -150,7 +150,7 @@ void UInGameHUD::UpdateTime(int32 Hour, int32 Minute)
 
 		if(Day_Night)
 		{
-			if(Day_Night && ASC)
+			if(Day_Night && IsValid(ASC))
 			{
 				int TotalMinutes = Hour * 60 + Minute;
 
@@ -190,16 +190,19 @@ void UInGameHUD::UpdateDays(int32 Days)
 {
 	if(DaysText)
 	{
-		FString NewText = FString::Printf(TEXT("%d Days"), Days);
-
-		DaysText->SetText(FText::FromString(NewText));
-		if (Days == 6 || Days == 12)
+		if (IsValid(ASC))
 		{
-			ASC->ApplyModToAttribute(ULOAttributeSet::GetLevelAttribute(),EGameplayModOp::Additive,1);
-			FGameplayTagContainer Tag;
-			Tag.AddTag(FGameplayTag::RequestGameplayTag("State.Reduction"));
-			ASC->CancelAbilities(&Tag);
-			ASC->TryActivateAbilitiesByTag(Tag);
+			FString NewText = FString::Printf(TEXT("%d Days"), Days);
+
+			DaysText->SetText(FText::FromString(NewText));
+			if (Days == 6 || Days == 12)
+			{
+				ASC->ApplyModToAttribute(ULOAttributeSet::GetLevelAttribute(),EGameplayModOp::Additive,1);
+				FGameplayTagContainer Tag;
+				Tag.AddTag(FGameplayTag::RequestGameplayTag("State.Reduction"));
+				ASC->CancelAbilities(&Tag);
+				ASC->TryActivateAbilitiesByTag(Tag);
+			}
 		}
 	}
 }

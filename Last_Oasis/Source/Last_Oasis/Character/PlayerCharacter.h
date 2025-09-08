@@ -148,6 +148,7 @@ public:
 	void ShowEffect();
 	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
 	void GetWeapon();
+	UFUNCTION()
 	void InitWidgetsFromHUD();
 
 private:
