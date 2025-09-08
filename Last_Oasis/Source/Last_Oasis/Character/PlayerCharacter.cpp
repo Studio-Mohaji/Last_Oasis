@@ -20,6 +20,8 @@
 #include "Components/BoxComponent.h"
 #include "Enemys/EnemyCh.h"
 #include "GameMode/LOGameModeBase.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "DrawDebugHelpers.h"
 #include "UI/InGameHUD.h"
 
 // Sets default values
@@ -170,6 +172,33 @@ APlayerCharacter::APlayerCharacter()
     WeaponRange2->SetupAttachment(GetMesh());
     WeaponRange3->SetupAttachment(GetMesh());
     
+}
+
+void APlayerCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    LOPC = Cast<ALOPlayerController>(GetController());
+
+    if (LOPC)
+    {
+        if (LOPC->HUD)
+        {
+            InitWidgetsFromHUD();
+        }
+        else
+        {
+            LOPC->OnHUDInitialized.AddDynamic(this, &APlayerCharacter::InitWidgetsFromHUD);
+        }
+    }
+
+    GetWorld()->GetTimerManager().SetTimer(
+        SpawnTimerHandle,
+        this,
+        &APlayerCharacter::SpawnActorAround,
+        SpawnInterval,
+        true
+    );
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
@@ -401,25 +430,6 @@ void APlayerCharacter::InteractionFuction(const FInputActionValue& Value)
 	// InventoryManager->GetItem( Item Data );
 }
 
-void APlayerCharacter::BeginPlay()
-{
-    Super::BeginPlay();
-
-    LOPC = Cast<ALOPlayerController>(GetController());
-
-    if (LOPC)
-    {
-        if (LOPC->HUD)
-        {
-            InitWidgetsFromHUD();
-        }
-        else
-        {
-            LOPC->OnHUDInitialized.AddDynamic(this, &APlayerCharacter::InitWidgetsFromHUD);
-        }
-    }
-}
-
 void APlayerCharacter::InitWidgetsFromHUD()
 {
     if (!LOPC || !LOPC->HUD) return;
@@ -486,6 +496,49 @@ void APlayerCharacter::EndHitCheck()
 void APlayerCharacter::ToggleMissionFunction()
 {
     LOPC->HUD->OpenGoal();
+}
+
+void APlayerCharacter::SpawnActorAround()
+{
+    if (!Enemy1 && !Enemy2) return;
+
+    TSubclassOf<AActor> SelectedClass = (FMath::RandBool() && Enemy1) ? Enemy1 : Enemy2;
+
+    FVector Origin = GetActorLocation();
+    FVector RandomOffset = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(MinRadius, MaxRadius);
+    FVector SpawnLoc = Origin + RandomOffset + FVector(0, 0, SpawnHeight);
+
+    // 라인 트레이스로 지면 찾기
+    FHitResult Hit;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+    bool bHit = GetWorld()->LineTraceSingleByChannel(
+        Hit,
+        SpawnLoc,
+        FVector(SpawnLoc.X, SpawnLoc.Y, SpawnLoc.Z - 20000.0f),
+        ECC_WorldStatic,
+        Params
+    );
+
+    // 디버그 라인
+    DrawDebugLine(
+        GetWorld(),
+        SpawnLoc,
+        bHit ? Hit.Location : FVector(SpawnLoc.X, SpawnLoc.Y, SpawnLoc.Z - 20000.0f),
+        bHit ? FColor::Green : FColor::Red,
+        false,
+        5.0f,
+        0,
+        5.0f
+    );
+
+    if (bHit)
+    {
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+        GetWorld()->SpawnActor<AActor>(SelectedClass, Hit.Location, FRotator::ZeroRotator, SpawnParams);
+    }
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

@@ -162,4 +162,29 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<class UBoxComponent> WeaponRange3;
+
+
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AActor> Enemy1;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AActor> Enemy2;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float MinRadius = 900.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float MaxRadius = 1000.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float SpawnInterval = 3.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float SpawnHeight = 12000.0f;
+
+	FTimerHandle SpawnTimerHandle;
+
+	UFUNCTION()
+	void SpawnActorAround();
 };
