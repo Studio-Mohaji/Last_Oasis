@@ -196,7 +196,6 @@ void APlayerCharacter::Tick(float DeltaSeconds)
         if (!ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow"))))
         {
             ASC->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow")));
-            UE_LOG(LogTemp, Log, TEXT("그림자 안!"));
         }
     }
     else
@@ -204,7 +203,6 @@ void APlayerCharacter::Tick(float DeltaSeconds)
         if (ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow"))))
         {
             ASC->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.InShadow")));
-            UE_LOG(LogTemp, Log, TEXT("그림자 밖!"));
         }
     }
 }
@@ -269,7 +267,7 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 {
     FVector2D MovementVector = Value.Get<FVector2D>();
 
-    if (Controller != nullptr)
+    if (IsValid(Controller))
     {
         const FRotator Rotation = Controller->GetControlRotation();
         const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -286,7 +284,7 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 {
     FVector2D LookAxisVector = Value.Get<FVector2D>();
 
-    if (Controller != nullptr)
+    if (IsValid(Controller))
     {
         AddControllerYawInput(LookAxisVector.X);
         AddControllerPitchInput(LookAxisVector.Y);
