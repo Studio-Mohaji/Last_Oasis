@@ -7,6 +7,8 @@
 #include "Actor/InteractiveActor.h"
 #include "Character/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameMode/LOGameModeBase.h"
+#include "UI/InGameHUD.h"
 
 AInventoryManager::AInventoryManager()
 {
@@ -82,6 +84,13 @@ void AInventoryManager::GetItem(AInteractiveActor* InteractiveActor)
 void AInventoryManager::GetDropItemData(const TArray<FDropItemData>& AcquiredItemData)
 {
 	if (AcquiredItemData.Num() <= 0) return;
+
+    if (AcquiredItemData[1].DropItemData == CraftingManager->SecondStoryCheckData)
+    {
+        // Phase 2
+        ALOPlayerController* PlayerContr = Cast<ALOPlayerController>(GetWorld()->GetFirstPlayerController());
+        PlayerContr->HUD->SetGoalText(2);
+    }
 
     for (const FDropItemData& DropData : AcquiredItemData)
     {

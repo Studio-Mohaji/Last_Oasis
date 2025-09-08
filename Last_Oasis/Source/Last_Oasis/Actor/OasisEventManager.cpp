@@ -7,6 +7,7 @@
 #include "../Character/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/LOGameModeBase.h"
+#include "UI/InGameHUD.h"
 
 // Sets default values
 AOasisEventManager::AOasisEventManager()
@@ -88,6 +89,20 @@ void AOasisEventManager::Tick(float DeltaTime)
 void AOasisEventManager::LightEvent(int32 index)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Light Event Index : %d"), index);
+
+	if (index == 0)
+	{
+		// Phase 1
+		ALOPlayerController* PlayerContr = Cast<ALOPlayerController>(GetWorld()->GetFirstPlayerController());
+		PlayerContr->HUD->SetGoalText(1);
+	}
+	else if (index == 3)
+	{
+		// Phase 1
+		ALOPlayerController* PlayerContr = Cast<ALOPlayerController>(GetWorld()->GetFirstPlayerController());
+		PlayerContr->HUD->SetGoalText(3);
+	}
+
 	FocusPC = GetWorld()->GetFirstPlayerController();
 	if (!FocusPC) return;
 

@@ -6,6 +6,9 @@
 #include "Character/PlayerCharacter.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
+
+#include "GamePlayAbility/LOAbilitySystemComponent.h"
+
 // Sets default values
 ACraftingManager::ACraftingManager()
 {
@@ -45,4 +48,17 @@ void ACraftingManager::WeaponCrafting()
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Weapon Crafting Event"));
 }
+
+
+void ACraftingManager::DuskMaskCrafting()
+{
+	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	if (Controller)
+	{
+		Cast<IAbilitySystemInterface>(Controller->GetPawn())->GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag("State.Mask"));
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Weapon Crafting Event"));
+}
+
+
 
